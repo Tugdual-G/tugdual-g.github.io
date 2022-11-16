@@ -1,9 +1,18 @@
 var start_idx = 169
 var map = L.map('map').setView([imgData[169][3], imgData[169][4]], 13);
+var myStyle = {
+    "color": "red",
+    "weight": 5,
+    "opacity": 0.65
+};
+
+
 var OpenTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
 	maxZoom: 17,
 	attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
 }).addTo(map);
+
+L.polyline(myLines, myStyle).addTo(map)
 
 function markerOnClick(num){
     var parentWin = window.parent;
