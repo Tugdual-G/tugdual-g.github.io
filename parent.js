@@ -30,6 +30,8 @@ function ChangeSlide(sens) {
 function flyToDiapo(event){
     idx = event.data;
     document.getElementById("slide").src = "mini/" + imgData[idx][1];
+    scroll(0,0);
+    sendCoord(imgData[idx][3], imgData[idx][4]);
 }
 
 updateInfos(idx);
