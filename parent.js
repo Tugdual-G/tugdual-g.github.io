@@ -9,6 +9,13 @@ function sendCoord(lat, lng) {
     iframeWin.postMessage([lat, lng], "*");
 }
 
+function updateInfos(idx) {
+    var infos = document.getElementById("infos");
+    infos.textContent=`elevation: ${imgData[idx][5].toFixed(0)}m, date: ${imgData[idx][0]}`;
+
+
+}
+
 function ChangeSlide(sens) {
     idx = idx + sens;
     if (idx < 0)
@@ -17,6 +24,7 @@ function ChangeSlide(sens) {
         idx = 0;
     document.getElementById("slide").src = "mini/" + imgData[idx][1];
     sendCoord(imgData[idx][3], imgData[idx][4]);
+    updateInfos(idx);
 }
 
 function flyToDiapo(event){
@@ -24,6 +32,7 @@ function flyToDiapo(event){
     document.getElementById("slide").src = "mini/" + imgData[idx][1];
 }
 
+updateInfos(idx);
 prvs.onclick = function(){ChangeSlide(-1);};
 nxt.onclick = function(){ChangeSlide(1);};
 
