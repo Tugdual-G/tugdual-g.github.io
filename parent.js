@@ -4,9 +4,9 @@ var prvs = document.getElementById("previous");
 var nxt = document.getElementById("next");
 document.getElementById("slide").src = "mini/" + imgData[idx][1];
 
-function sendCoord(lat, lng) {
+function sendCoord(idx) {
     var iframeWin = document.getElementById("cailleframe").contentWindow;
-    iframeWin.postMessage([lat, lng], "*");
+    iframeWin.postMessage(idx, "*");
 }
 
 function updateInfos(idx) {
@@ -23,7 +23,7 @@ function ChangeSlide(sens) {
     if (idx > imgData.length - 1)
         idx = 0;
     document.getElementById("slide").src = "mini/" + imgData[idx][1];
-    sendCoord(imgData[idx][3], imgData[idx][4]);
+    sendCoord(idx);
     updateInfos(idx);
 }
 
@@ -31,7 +31,7 @@ function flyToDiapo(event){
     idx = event.data;
     document.getElementById("slide").src = "mini/" + imgData[idx][1];
     scroll(0,0);
-    sendCoord(imgData[idx][3], imgData[idx][4]);
+    sendCoord(idx);
 }
 
 updateInfos(idx);
@@ -46,7 +46,6 @@ document.addEventListener("keydown", (event) => {
         ChangeSlide(-1);
         return;
     }
-
     // Right
     if (event.keyCode === 39) {
         ChangeSlide(1);
