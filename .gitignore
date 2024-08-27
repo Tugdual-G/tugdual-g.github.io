@@ -1,0 +1,4 @@
+*.ttf
+*.zip
+*__pycache__*
+trip/
