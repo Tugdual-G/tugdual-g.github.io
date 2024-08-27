@@ -46,11 +46,11 @@ export function createBilinearRenderProgram(gl, fbShape, frameBuffer){
         uniform vec2 fbShape;
         out vec4 color;
 
-        float ambientLight = 1.0;
-        float specularLightStrength = 0.9;
+        float ambientLight = 0.2;
+        float specularLightStrength = 0.5;
         // Color gradient
         vec3 c0 = vec3(0.0/255.0, 149.0/255.0, 177.0/255.0);
-        vec3 lightPosition = vec3(1.0, 2.0, 8.0);
+        vec3 lightPosition = vec3(-1.0, 0.0, 4.0);
         // vec4 c1 = vec4(167.0/255.0, 255.0/255.0,235.0/255.0, 1.0);
 
         float bilinear(sampler2D tex, vec2 tex_coord){
@@ -72,12 +72,12 @@ export function createBilinearRenderProgram(gl, fbShape, frameBuffer){
         }
 
         vec3 normal(sampler2D tex, vec2 texCoord, float dx, float dy){
-           float dfdx = 0.5 * (bilinear(tex, texCoord - vec2(dx, 0.0)) - bilinear(tex, texCoord + vec2(dx, 0.0)));
-           float dfdy = 0.5 * (bilinear(tex, texCoord - vec2(0.0, dy)) - bilinear(tex, texCoord + vec2(0.0, dy)));
+           float dhdx = 0.5 * (bilinear(tex, texCoord + vec2(dx, 0.0)) - bilinear(tex, texCoord - vec2(dx, 0.0)));
+           float dhdy = 0.5 * (bilinear(tex, texCoord + vec2(0.0, dy)) - bilinear(tex, texCoord - vec2(0.0, dy)));
            float isCloseToMask = texture(mask, texCoord - vec2(dx, dy)).x + texture(mask, texCoord + vec2(dx, dy)).x;
            isCloseToMask += texture(mask, texCoord - vec2(dx, -dy)).x + texture(mask, texCoord + vec2(dx, -dy)).x;
            if (isCloseToMask == 0.0){
-                return normalize(cross(normalize(vec3(1.0, 0, dfdx)), normalize(vec3(0.0, 1.0, dfdy))));
+                return normalize(cross(normalize(vec3(1.0, 0, dhdx)), normalize(vec3(0.0, 1.0, dhdy))));
             }else{
                 return vec3(0.0, 0.0, 1.0);
             }
@@ -89,15 +89,14 @@ export function createBilinearRenderProgram(gl, fbShape, frameBuffer){
             vec3 lightDirection = normalize(lightPosition);
             vec2 texCoord = gl_FragCoord.xy / fbShape;
             vec3 faceNormal = normal(tex, texCoord, 2.0/fbShape.x, 2.0/fbShape.y);
-            float diffusion = dot(lightDirection, faceNormal) - lightDirection.z;
+            float diffusion = dot(lightDirection, faceNormal);// - lightDirection.z;
 
-            vec3 fragmentViewDirection = normalize(vec3(0.0, 0.0, 1.0) - vec3(gl_FragCoord/fbShape.x));
+            vec3 fragmentViewDirection = normalize(vec3(0.0, 0.0, 1.0) - vec3(gl_FragCoord/fbShape.x) + vec3(0.5, 0.25, 0.0));
             vec3 reflectedLightDirection = 2.0 * dot(faceNormal, lightDirection)*faceNormal-lightDirection;
             float specularLigth = pow(max(dot(reflectedLightDirection, fragmentViewDirection), 0.0), 32.0);
             specularLigth *= specularLightStrength;
 
-            float intensity =  (specularLigth + ambientLight - diffusion);
-            //vec3 col = c0 * (1.0 + 0.9 * diffusion);
+            float intensity =  (specularLigth + ambientLight + diffusion);
             color = vec4(c0 * intensity, 1.0);
         }
    `;
