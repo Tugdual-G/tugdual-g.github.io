@@ -216,6 +216,10 @@ function main() {
 
     let aspect_ratio = canvas.clientHeight / canvas.clientWidth;
     let nx = 256;
+    // Check if the user is accessing the page on a mobile device
+    var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    if (isMobile) { nx = 128; }
+
     let ny = Math.round(nx*aspect_ratio);
     let domain_center_shape = [nx, ny];
     let domain_edge_shape = [nx+1, ny+1];
