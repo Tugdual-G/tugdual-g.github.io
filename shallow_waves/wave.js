@@ -216,9 +216,11 @@ function main() {
 
     let aspect_ratio = canvas.clientHeight / canvas.clientWidth;
     let nx = 256;
+    let dt = 0.04;
+
     // Check if the user is accessing the page on a mobile device
     var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    if (isMobile) { nx = 128; }
+    if (isMobile) { nx = 128; dt = 0.08; }
 
     let ny = Math.round(nx*aspect_ratio);
     let domain_center_shape = [nx, ny];
@@ -229,7 +231,6 @@ function main() {
     let Ly = ny * dx
     let domain_dimensions = [Lx, Ly];
 
-    let dt = 0.04;
 
 
     window.addEventListener('mousemove', e => {
