@@ -90,6 +90,8 @@ function createIcoVertices(){
     let verticeAttrs = new Float32Array(20 * 3 * 8);
     let vertIdx = 0;
     let normal = [0.0, 0.0, 0.0];
+    let texCoord = [[0.0,0.0],[1.0,0.0],[0.5, Math.sqrt(3)/2.0]]
+
     for (let i = 0; i < 20; ++i){
         normal = faceNormal(faces[i], vertices);
         for (let j = 0; j < 3; ++j){
@@ -100,8 +102,8 @@ function createIcoVertices(){
             verticeAttrs[i * 24 + j * 8 + 3] = normal[0];
             verticeAttrs[i * 24 + j * 8 + 4] = normal[1];
             verticeAttrs[i * 24 + j * 8 + 5] = normal[2];
-            verticeAttrs[i * 24 + j * 8 + 6] = 0.0;
-            verticeAttrs[i * 24 + j * 8 + 7] = 0.0;
+            verticeAttrs[i * 24 + j * 8 + 6] = texCoord[j][0];
+            verticeAttrs[i * 24 + j * 8 + 7] = texCoord[j][1];
         }
     }
     return verticeAttrs;
@@ -118,7 +120,7 @@ function main() {
         return;
     }
 
-    let q = new Quaternion(1.0, 0.0, 0.0, 0.0);
+    let q = rotationQuaternion(1.0, 1.0, 0.0, 0.2);
     let q_inv = q.inv();
     let isRotating = false;
 
@@ -131,19 +133,38 @@ function main() {
     });
 
     window.addEventListener('mousemove', e => {
+        const pos = getCanvasCursorPosition(e, gl.canvas);
         if (isRotating) {
-            const pos = getCanvasCursorPosition(e, gl.canvas);
             let dx = -(pos.x - old_pos.x);
             let dy = -(pos.y - old_pos.y);
             let velocity = Math.pow(dx*dx + dy*dy + 0.0001, 0.5);
 
-            old_pos.x = pos.x;
-            old_pos.y = pos.y;
-
-            let q_rot = rotationQuaternion(-dy / velocity, -dx / velocity, 0.0, velocity * 0.005);
+            let q_rot = rotationQuaternion(-dy / velocity, -dx / velocity, 0.0, velocity * 0.01);
             q = q_rot.mult(q);
-            q_inv = q_inv.mult(q_rot.inv());
+            q_inv = q.inv();
+            // q_inv = q_inv.mult(q_rot.inv());
         }
+        old_pos.x = pos.x;
+        old_pos.y = pos.y;
+
+    });
+
+    // Create a texture.
+    var texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+
+    // Fill the texture with a 1x1 blue pixel.
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
+                  new Uint8Array([0, 0, 255, 255]));
+
+    // Asynchronously load an image
+    var image = new Image();
+    image.src = "blog.png";
+    image.addEventListener('load', function() {
+        // Now that the image has loaded make copy it to the texture.
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
+        gl.generateMipmap(gl.TEXTURE_2D);
     });
 
     let programOb = createIcoProgram(gl);
@@ -151,9 +172,9 @@ function main() {
     gl.uniform4f(programOb.uniformLocations.q, q.q[0], q.q[1], q.q[2], q.q[3]);
     gl.uniform4f(programOb.uniformLocations.q_inv, q_inv.q[0], q_inv.q[1], q_inv.q[2], q_inv.q[3]);
 
-    // look up where the vertex data needs to go.
-    let vertexLoc = gl.getAttribLocation(programOb.program, "a_position");
-    let normalLoc = gl.getAttribLocation(programOb.program, "a_normal");
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.uniform1i(programOb.uniformLocations.tex, 0);
 
     // Create a buffer and put three 2d clip space points in it
     let positionBuffer = gl.createBuffer();
@@ -172,7 +193,7 @@ function main() {
     gl.bindVertexArray(vao);
 
     // Turn on the attribute
-    gl.enableVertexAttribArray(vertexLoc);
+    gl.enableVertexAttribArray(programOb.attribLocations.vertex);
 
     // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
     {
@@ -182,11 +203,11 @@ function main() {
         let stride = 8 * 4;
         let offset = 0;
         gl.vertexAttribPointer(
-            vertexLoc, size, type, normalize, stride, offset);
+            programOb.attribLocations.vertex, size, type, normalize, stride, offset);
     }
 
     // Turn on the attribute
-    gl.enableVertexAttribArray(normalLoc);
+    gl.enableVertexAttribArray(programOb.attribLocations.normal);
 
     // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
     {
@@ -196,7 +217,21 @@ function main() {
         let stride = 8 * 4;
         let offset = 3 * 4;
         gl.vertexAttribPointer(
-            normalLoc, size, type, normalize, stride, offset);
+            programOb.attribLocations.normal, size, type, normalize, stride, offset);
+    }
+
+    // Turn on the attribute
+    gl.enableVertexAttribArray(programOb.attribLocations.texCoord);
+
+    // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
+    {
+        let size = 2;
+        let type = gl.FLOAT;
+        let normalize = false;
+        let stride = 8 * 4;
+        let offset = 6 * 4;
+        gl.vertexAttribPointer(
+            programOb.attribLocations.texCoord, size, type, normalize, stride, offset);
     }
 
     // Tell WebGL how to convert from clip space to pixels
@@ -208,7 +243,7 @@ function main() {
     gl.clearColor(0, 0, 0, 0);
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    // turn on depth testing
+    // // turn on depth testing
     gl.enable(gl.DEPTH_TEST);
 
     // Tell it to use our program (pair of shaders)
@@ -228,6 +263,7 @@ function main() {
         gl.uniform4f(programOb.uniformLocations.q_inv, q_inv.q[0], q_inv.q[1], q_inv.q[2], q_inv.q[3]);
         gl.drawArrays(primitiveType, offset, count);
         requestAnimationFrame(animation);
+
     }
 }
 

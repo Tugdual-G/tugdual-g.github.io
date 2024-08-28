@@ -1,7 +1,8 @@
 body {
     overflow: hidden;
-    background-color: lightseagreen;
-    margin:0;
+    background-color: #47abab;
+    /* background-color: black; */
+    margin:0 20%;
     z-index: -1;
 }
 
