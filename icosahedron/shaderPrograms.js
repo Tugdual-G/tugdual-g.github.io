@@ -85,6 +85,21 @@ var fragmentShaderSource = `#version 300 es
       return -sqrt(d.x)*sign(d.y);
     }
 
+    mat3 gaussianBlur = mat3(1, 2, 1, 2, 4, 2, 1, 2, 1) * 0.0625;
+    float gaussFilter(sampler2D tex, vec2 texCoord){
+        vec2 dx = dFdx(texCoord) * 0.5;
+        vec2 dy = dFdy(texCoord) * 0.5;
+        vec3 directions = vec3(-1.0, 0.0, 1.0);
+        float c = 0.0;
+        for (int i = 0; i < 3; ++i){
+            for (int j = 0; j < 3; ++j){
+                c += gaussianBlur[i][j] * texture(tex, texCoord + dy * directions[i] + dx * directions[j]).x;
+            }
+
+        }
+        return c;
+    }
+
     void main() {
 
     vec3 lightDirection = normalize(lightPos);
@@ -97,8 +112,9 @@ var fragmentShaderSource = `#version 300 es
 
     float intensity =  (specularLigth + ambientLight + diffusion)/(1.0 + ambientLight);
     vec3 c = c0;
-    c.x = 0.4 + 0.2 * cos(50.0 * sdTriangle(texCoord));
-    c *= 1.0 - 0.9 * texture(tex, vec2(0.0, 1.0) - texCoord).x ;
+    // c.x = 0.4 + 0.2 * cos(50.0 * sdTriangle(texCoord));
+    // c *= 1.0 - 0.7 * texture(tex, vec2(0.0, 1.0) - texCoord).x ;
+    c *= 1.0 - 0.7 * gaussFilter(tex, texCoord) ;
     outColor = vec4(c * intensity, 1.0);
     }
 `;

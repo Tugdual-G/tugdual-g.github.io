@@ -87,10 +87,13 @@ function createIcoVertices(){
         [6, 2, 10],
         [8, 6, 7],
     ];
+
+
     let verticeAttrs = new Float32Array(20 * 3 * 8);
     let vertIdx = 0;
     let normal = [0.0, 0.0, 0.0];
-    let texCoord = [[0.0,0.0],[1.0,0.0],[0.5, Math.sqrt(3)/2.0]]
+    let texCoordUneven = [[0.0,0.0],[1.0,0.0],[0.5, 1.0]]
+    let texCoordEven = [[-0.5,1.0],[0.0,0.0],[0.5, 1.0]];
 
     for (let i = 0; i < 20; ++i){
         normal = faceNormal(faces[i], vertices);
@@ -102,8 +105,14 @@ function createIcoVertices(){
             verticeAttrs[i * 24 + j * 8 + 3] = normal[0];
             verticeAttrs[i * 24 + j * 8 + 4] = normal[1];
             verticeAttrs[i * 24 + j * 8 + 5] = normal[2];
-            verticeAttrs[i * 24 + j * 8 + 6] = texCoord[j][0];
-            verticeAttrs[i * 24 + j * 8 + 7] = texCoord[j][1];
+            if (i % 2 == 0){
+                verticeAttrs[i * 24 + j * 8 + 6] = 1.0 -(texCoordEven[j][0] + Math.floor(i/2))/10.0;
+                verticeAttrs[i * 24 + j * 8 + 7] = 1.0 -texCoordEven[j][1];
+
+            } else {
+                verticeAttrs[i * 24 + j * 8 + 6] = 1.0 -(texCoordUneven[j][0] + Math.floor(i/2))/10.0;
+                verticeAttrs[i * 24 + j * 8 + 7] = 1.0 -texCoordUneven[j][1];
+            }
         }
     }
     return verticeAttrs;
@@ -128,8 +137,9 @@ function main() {
         isRotating = true;
     });
 
-    canvas.addEventListener('mouseup', e => {
+    window.addEventListener('mouseup', e => {
         isRotating = false;
+        console.log(q.q);
     });
 
     window.addEventListener('mousemove', e => {
@@ -156,15 +166,21 @@ function main() {
     // Fill the texture with a 1x1 blue pixel.
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
                   new Uint8Array([0, 0, 255, 255]));
+    // gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 
     // Asynchronously load an image
     var image = new Image();
-    image.src = "blog.png";
+    image.src = "texture.png";
     image.addEventListener('load', function() {
         // Now that the image has loaded make copy it to the texture.
         gl.bindTexture(gl.TEXTURE_2D, texture);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA,gl.UNSIGNED_BYTE, image);
+
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
         gl.generateMipmap(gl.TEXTURE_2D);
+
     });
 
     let programOb = createIcoProgram(gl);

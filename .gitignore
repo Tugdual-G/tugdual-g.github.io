@@ -1,4 +1,5 @@
 *.ttf
 *.zip
 *__pycache__*
+*.xcf
 trip/
