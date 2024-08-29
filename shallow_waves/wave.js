@@ -212,15 +212,17 @@ function main() {
 
 
     const canvas = document.querySelector("#webglCanvas");
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
     let canvas_shape = [canvas.width, canvas.height]; // canva domain_center_shape
 
     let aspect_ratio = canvas.clientHeight / canvas.clientWidth;
     let nx = 256;
-    let dt = 0.04;
+    let dt = 0.03125;
 
     // Check if the user is accessing the page on a mobile device
-    var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    if (isMobile) { nx = 128; dt = 0.08; }
+    // var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    // if (isMobile) { nx = 128; dt = 0.08; }
 
     let ny = Math.round(nx*aspect_ratio);
     let domain_center_shape = [nx, ny];
