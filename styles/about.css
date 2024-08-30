@@ -15,8 +15,8 @@ html {
 }
 
 body {
-    overflow: hidden;
-    margin:0 25%;
+    /* overflow: hidden; */
+    margin:5% 25%;
     font-size: 34px;
     color: lightyellow;
     background: rgb(71,171,171);
@@ -35,11 +35,11 @@ h2{
 }
 
 
-.social {
-    font-family: 'FreeMonoBoldOblique';
-    font-size: 34px;
-    margin: 0 150px;
-    z-index: 1;
+canvas {
+    margin: auto;
+    display: block;
+    width: 25vw;
+    height: 25vw;
 }
 
 a:link {
