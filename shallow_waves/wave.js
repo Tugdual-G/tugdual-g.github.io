@@ -212,11 +212,13 @@ function main() {
 
 
     const canvas = document.querySelector("#webglCanvas");
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
     let canvas_shape = [canvas.width, canvas.height]; // canva domain_center_shape
 
     let aspect_ratio = canvas.clientHeight / canvas.clientWidth;
     let nx = 256;
-    let dt = 0.04;
+    let dt = 0.031;
 
     // Check if the user is accessing the page on a mobile device
     var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);

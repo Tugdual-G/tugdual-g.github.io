@@ -46,12 +46,6 @@ export function createBilinearRenderProgram(gl, fbShape, frameBuffer){
         uniform vec2 fbShape;
         out vec4 color;
 
-        float ambientLight = 0.2;
-        float specularLightStrength = 0.5;
-        // Color gradient
-        vec3 c0 = vec3(0.0/255.0, 149.0/255.0, 177.0/255.0);
-        vec3 lightPosition = vec3(-1.0, 0.0, 4.0);
-        // vec4 c1 = vec4(167.0/255.0, 255.0/255.0,235.0/255.0, 1.0);
 
         float bilinear(sampler2D tex, vec2 tex_coord){
             vec2 tex_shape = vec2(textureSize(tex, 0));
@@ -74,21 +68,32 @@ export function createBilinearRenderProgram(gl, fbShape, frameBuffer){
         vec3 normal(sampler2D tex, vec2 texCoord, float dx, float dy){
            float dhdx = 0.5 * (bilinear(tex, texCoord + vec2(dx, 0.0)) - bilinear(tex, texCoord - vec2(dx, 0.0)));
            float dhdy = 0.5 * (bilinear(tex, texCoord + vec2(0.0, dy)) - bilinear(tex, texCoord - vec2(0.0, dy)));
-           float isCloseToMask = texture(mask, texCoord - vec2(dx, dy)).x + texture(mask, texCoord + vec2(dx, dy)).x;
-           isCloseToMask += texture(mask, texCoord - vec2(dx, -dy)).x + texture(mask, texCoord + vec2(dx, -dy)).x;
-           if (isCloseToMask == 0.0){
-                return normalize(cross(normalize(vec3(1.0, 0, dhdx)), normalize(vec3(0.0, 1.0, dhdy))));
-            }else{
-                return vec3(0.0, 0.0, 1.0);
-            }
+
+           // float isCloseToMask = texture(mask, texCoord - vec2(dx, dy)).x + texture(mask, texCoord + vec2(dx, dy)).x;
+           // isCloseToMask += texture(mask, texCoord - vec2(dx, -dy)).x + texture(mask, texCoord + vec2(dx, -dy)).x;
+           // if (isCloseToMask == 0.0){
+            //     return normalize(cross(normalize(vec3(1.0, 0, dhdx)), normalize(vec3(0.0, 1.0, dhdy))));
+            // }else{
+            //     return vec3(0.0, 0.0, 1.0);
+            // }
+            return normalize(cross(vec3(1.0, 0, dhdx), vec3(0.0, 1.0, dhdy)));
         }
 
+        float ambientLight = 0.2;
+        float specularLightStrength = 0.5;
+        // Color gradient
+        vec3 c0 = vec3(0.0/255.0, 149.0/255.0, 177.0/255.0);
+        vec3 lightPosition = vec3(-1.0, 0.0, 4.0);
+        // vec4 c1 = vec4(167.0/255.0, 255.0/255.0,235.0/255.0, 1.0);
 
         void main() {
 
+            vec2 texShape = vec2(textureSize(tex, 0));
+            float dx = 1.0/texShape.x;
+            float dy = 1.0/texShape.y;
             vec3 lightDirection = normalize(lightPosition);
             vec2 texCoord = gl_FragCoord.xy / fbShape;
-            vec3 faceNormal = normal(tex, texCoord, 2.0/fbShape.x, 2.0/fbShape.y);
+            vec3 faceNormal = normal(tex, texCoord, dx, dy);
             float diffusion = dot(lightDirection, faceNormal);// - lightDirection.z;
 
             vec3 fragmentViewDirection = normalize(vec3(0.0, 0.0, 1.0) - vec3(gl_FragCoord/fbShape.x) + vec3(0.5, 0.25, 0.0));
@@ -203,37 +208,6 @@ export function createInitEtaProgram(gl, shape, domain_dimensions, frameBuffer){
     gl.uniform2f(programObject.uniformLocations.shape, shape[0], shape[1]);
     gl.uniform2f(programObject.uniformLocations.domain_dimensions, domain_dimensions[0], domain_dimensions[1]);
 
-    return programObject;
-}
-
-export function createCopyEtaProgram(gl, etaShape, frameBuffer){
-
-    const fragmentShaderSource =
-        `#version 300 es
-        precision highp float;
-
-        out vec4 color;
-        void main() {
-            color = vec4(0.0, 0.0, 0.0, 0.0);
-        }
-    `;
-
-
-    const vertexShader = compileShader(gl, vertexShaderSource, gl.VERTEX_SHADER);
-    const fragmentShader = compileShader(gl, fragmentShaderSource, gl.FRAGMENT_SHADER);
-    const shaderProgram = createProgram(gl, vertexShader, fragmentShader);
-
-    let programObject = {
-        program: shaderProgram,
-        fb: frameBuffer,
-        fbShape: UVshape,
-        nvertices: 6,
-        attribLocations: {
-            vertexPosition: gl.getAttribLocation(shaderProgram, "a_position"),
-        },
-    };
-
-    gl.useProgram(programObject.program);
     return programObject;
 }
 
