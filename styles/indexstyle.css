@@ -92,23 +92,30 @@ img {
 }
 
 #about {
-    rigth:50vw;
-    top:50vh;
-    transform: translate( -300px, -150px);
+    left:50%;
+    top:50%;
+    transform: translate( -350px, -20px);
     background-color: #00e6ff;
 }
 #cv {
-    right:50vw;
-    top:50vh;
-    transform: translate( +300px, +50px);
+    left:50%;
+    top:50%;
+    transform: translate( +0px -20px);
     background-color: #0097b4;
 
 }
 
 #blog {
-    right:50vw;
-    top:50vh;
-    transform: translate( 50px, -10px);
+    left:50%;
+    top:50%;
+    transform: translate( -110px, -20px);
+    background-color: #00b1d4;
+}
+
+#apps {
+    left:50%;
+    top:50%;
+    transform: translate( 100px, -20px);
     background-color: #00b1d4;
 }
 
@@ -133,7 +140,7 @@ a:focus {
 }
 
 a:hover {
-    color: lightcoral;
+    color: lightpink;
 }
 
 a:active {
