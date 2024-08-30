@@ -176,11 +176,46 @@ export function createInitEtaProgram(gl, shape, domain_dimensions, frameBuffer){
         out vec4 color;
         void main() {
             vec2 cartesian_coord = gl_FragCoord.xy * domain_dimensions / shape;
-            float R2 = dot(cartesian_coord-domain_dimensions/3.0,cartesian_coord-domain_dimensions/3.0);
-            float c = 2.0 * exp(-R2/64.0);
-            c -= exp(-R2/32.0);
-            R2 = dot(cartesian_coord-2.0*domain_dimensions/3.0,cartesian_coord-3.0*domain_dimensions/4.0);
-            c += 1.0*exp(-R2/20.0);
+            float L = domain_dimensions.x;
+            float H = domain_dimensions.y;
+            float c = 0.0;
+            float R2 = 0.0;
+
+            vec2 coord2 = cartesian_coord - domain_dimensions / 3.0;
+            R2 = dot(coord2, coord2);
+            c = 3.0 * exp(-R2 / 32.0);
+            c -= 1.5 * exp(-R2 / 10.0);
+
+            coord2 = cartesian_coord - vec2(3.0 * L / 4.0, 2.0 * H / 3.0);
+            R2 = dot(coord2, coord2);
+            c += 4.0 * exp(-R2/16.0);
+            c -= 1.9 * exp(- R2/4.0);
+
+            coord2 = cartesian_coord - vec2(L / 4.0, 3.0 * H / 4.0);
+            R2 = dot(coord2, coord2);
+            c += 2.9 * exp(- R2/16.0) ;
+            c -= 1.9 * exp(- R2/4.0);
+
+            coord2 = cartesian_coord - vec2(5.0 * L / 6.0, 1.0 * H / 4.0);
+            R2 = dot(coord2, coord2);
+            c += 2.9 * exp(- R2/64.0) ;
+            c -= 1.9 * exp(- R2/4.0);
+
+            coord2 = cartesian_coord - vec2(4.0 * L / 6.0, 1.0 * H / 6.0);
+            R2 = dot(coord2, coord2);
+            c += 2.9 * exp(- R2/16.0) ;
+            c -= 1.9 * exp(- R2/4.0);
+
+            coord2 = cartesian_coord - vec2(L / 6.0, 1.0 * H / 7.0);
+            R2 = dot(coord2, coord2);
+            c += 2.9 * exp(- R2/16.0) ;
+            c -= 1.9 * exp(- R2/4.0);
+            c += 1.9 * exp(- R2/2.0);
+
+            coord2 = cartesian_coord - vec2(L / 2.1, 6.0 * H / 7.0);
+            R2 = dot(coord2, coord2);
+            c += 4.8 * exp(- R2/8.0) ;
+            c -= 1.9 * exp(- R2/4.0);
             color = vec4(c, 0.0, 0.0, 0.0);
         }
     `;
