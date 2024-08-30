@@ -352,9 +352,15 @@ function main() {
     gl.activeTexture(gl.TEXTURE1);
     gl.bindTexture(gl.TEXTURE_2D, eta1);
 
+    const fpsElem = document.querySelector("#fpsValue");
+    let framesDT = new Float64Array(40);
+    framesDT.map((x) => 60.0);
+
+    let t0 = 0.0;
+    let i = 0;
     requestAnimationFrame(step);
 
-    function step(){
+    function step(t1){
         // UV
         gl.useProgram(UVProgramObject.program);
         gl.uniform1i(UVProgramObject.uniformLocations.eta, 1);
@@ -392,6 +398,14 @@ function main() {
 
 
         cursor.velocity = 0.0;
+        const dt = t1 - t0;
+        framesDT[i] = dt;
+        t0 = t1;
+        const fps = 1000.0 * framesDT.length / framesDT.reduce((partialSum, a) => partialSum + a, 0);
+        if (i%10 == 0){
+            fpsElem.textContent = fps.toFixed(1);
+        }
+        i = (i + 1)%framesDT.length;
         requestAnimationFrame(step);
     }
 
