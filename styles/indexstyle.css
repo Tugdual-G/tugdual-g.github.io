@@ -15,14 +15,14 @@ html {
 
 body {
     overflow: hidden;
-    margin:0;
+    margin:0 25%;
     color: lightyellow;
     background: rgb(71,171,171);
     z-index: -1;
 }
 .grid-container {
     display: grid;
-    grid-template-columns: 1fr 50vw 1fr; /* Center column fixed at 200px */
+    grid-template-columns: 1fr; /* Center column fixed at 200px */
     grid-template-rows: minmax(0%, 35%) 50vh minmax(0%, 35%); /* Center row fixed at 200px */
     gap: 0px; /* Optional gap between grid items */
     height: 100vh; /* Adjust height as needed */
@@ -37,9 +37,6 @@ body {
     font-size: 24px;
 }
 
-.grid-item:nth-child(1), :nth-child(3), :nth-child(7), :nth-child(9){
-    background-color: #0095b1;
-}
 
 #webglCanvas {
     position: relative;
@@ -148,6 +145,12 @@ a:active {
 
 /* Media query to hide side columns and top/bottom rows on small screens */
 @media (max-width: 1000px) {
+
+    body {
+        overflow: hidden;
+        margin:0 0;
+    }
+
     .grid-container {
         display: grid;
         grid-template-columns: 100vw; /* Center column fixed at 200px */
@@ -155,10 +158,4 @@ a:active {
         gap: 0px; /* Optional gap between grid items */
         height: 100vh; /* Adjust height as needed */
     }
-    .grid-item:not(:nth-child(2), :nth-child(5),  :nth-child(8)) {
-        display: none; /* Hide all except the center grid item */
-        }
-    /* .grid-item:nth-child(5) { */
-    /*     border: none; /\* Remove the border around the center item *\/ */
-    /* } */
 }
