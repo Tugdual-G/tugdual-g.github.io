@@ -353,8 +353,7 @@ function main() {
     gl.bindTexture(gl.TEXTURE_2D, eta1);
 
     const fpsElem = document.querySelector("#fpsValue");
-    let framesDT = new Float64Array(40);
-    framesDT.map((x) => 60.0);
+    let framesDT = new Float64Array(20);
 
     let t0 = 0.0;
     let i = 0;

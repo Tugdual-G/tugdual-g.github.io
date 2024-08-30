@@ -1,0 +1,71 @@
+@font-face {
+    font-family: 'FreeMonoBoldOblique';
+    src: url('../fonts/FreeMonoBoldOblique.woff') format('woff'), /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+.montserrat {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+html {
+    z-index: -1;
+}
+
+body {
+    overflow: hidden;
+    margin:0 25%;
+    font-size: 34px;
+    color: lightyellow;
+    background: rgb(71,171,171);
+    z-index: -1;
+}
+
+h1{
+    font-size: 40px;
+    font-family: "Montserrat";
+    text-align: Left;
+}
+
+h2{
+    font-family: "Montserrat";
+    text-align: center;
+}
+
+
+.social {
+    font-family: 'FreeMonoBoldOblique';
+    font-size: 34px;
+    margin: 0 150px;
+    z-index: 1;
+}
+
+a:link {
+    color: lightyellow;
+    text-decoration: none;
+}
+
+a:visited {
+    color: lightskyblue;
+}
+
+a:focus {
+}
+
+a:hover {
+    color: lightpink;
+}
+
+a:active {
+}
+
+/* Media query to hide side columns and top/bottom rows on small screens */
+@media (max-width: 1000px) {
+
+    body {
+        overflow: hidden;
+        margin:0 0;
+    }
+}
