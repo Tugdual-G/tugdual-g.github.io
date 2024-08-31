@@ -23,6 +23,12 @@ body {
     z-index: -1;
 }
 
+img {
+    display: block;
+    margin: auto;
+    width:50%;
+}
+
 h1{
     font-size: 40px;
     font-family: "Montserrat";
@@ -40,6 +46,10 @@ canvas {
     display: block;
     width: 25vw;
     height: 25vw;
+}
+
+.theme {
+    display: none;
 }
 
 a:link {
@@ -65,7 +75,13 @@ a:active {
 @media (max-width: 1000px) {
 
     body {
-        overflow: hidden;
         margin:5% 5%;
+    }
+
+    canvas {
+        margin: auto;
+        display: block;
+        width: 50vw;
+        height: 50vw;
     }
 }

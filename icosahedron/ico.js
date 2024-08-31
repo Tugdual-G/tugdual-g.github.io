@@ -230,9 +230,24 @@ function getFaceFromTexCoord(texCoord){
 
 function handleClickOnFace(face){
     console.log(face);
+    let about = document.querySelector("#icoTheme");
+    let theme;
     switch (face){
-        case 1:
-            window.open("http://localhost:8000/","_self")
+        // case 1:
+        //     window.open("http://localhost:8000/","_self")
+        //     break;
+
+        case 6:
+            theme = document.querySelector("#trees");
+            about.innerHTML = theme.innerHTML;
+            break;
+        case 12:
+            theme = document.querySelector("#bike");
+            about.innerHTML = theme.innerHTML;
+            break;
+        case 14:
+            theme = document.querySelector("#spoons");
+            about.innerHTML = theme.innerHTML;
             break;
         default:
             break;
