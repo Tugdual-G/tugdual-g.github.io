@@ -405,8 +405,8 @@ function main() {
     });
 
     canvas.addEventListener("touchstart", (e) => {
-        const touch = e.targetTouches.item(0);
-        const pos = getCanvasCursorPosition(touch, gl.canvas);
+        let touch = e.targetTouches.item(0);
+        let pos = getCanvasCursorPosition(touch, gl.canvas);
         old_pos.x = pos.x;
         old_pos.y = pos.y;
         isRotating = true;
@@ -418,8 +418,8 @@ function main() {
     });
 
     canvas.addEventListener("touchmove", (e) => {
-        const touch = e.targetTouches.item(0);
-        const pos = getCanvasCursorPosition(touch, gl.canvas);
+        let touch = e.targetTouches.item(0);
+        let pos = getCanvasCursorPosition(touch, gl.canvas);
         old_pos.x = pos.x;
         old_pos.y = pos.y;
         rotate(touch);
