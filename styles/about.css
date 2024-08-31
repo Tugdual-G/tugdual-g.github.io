@@ -26,9 +26,9 @@ body {
 img {
     display: block;
     margin: auto;
-    padding: 10%;
-    max-width:100%
-    height:auto
+    padding: 5% 0;
+    max-width:100%;
+    height:auto;
 }
 
 h1{
