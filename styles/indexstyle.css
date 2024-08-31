@@ -23,7 +23,7 @@ body {
 .grid-container {
     display: grid;
     grid-template-columns: 1fr; /* Center column fixed at 200px */
-    grid-template-rows: minmax(0%, 35%) 50vh minmax(0%, 35%); /* Center row fixed at 200px */
+    grid-template-rows: 1fr 50vh 1fr; /* Center row fixed at 200px */
     gap: 0px; /* Optional gap between grid items */
     height: 100vh; /* Adjust height as needed */
 }
