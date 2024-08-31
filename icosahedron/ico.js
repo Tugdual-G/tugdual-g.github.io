@@ -237,6 +237,8 @@ function handleClickOnFace(face){
         //     window.open("http://localhost:8000/","_self")
         //     break;
 
+        case 0:
+            break;
         case 6:
             theme = document.querySelector("#trees");
             about.innerHTML = theme.innerHTML;
@@ -250,6 +252,8 @@ function handleClickOnFace(face){
             about.innerHTML = theme.innerHTML;
             break;
         default:
+            theme = document.querySelector("#empty");
+            about.innerHTML = theme.innerHTML;
             break;
 
     }
