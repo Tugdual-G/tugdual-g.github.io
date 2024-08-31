@@ -404,11 +404,25 @@ function main() {
         rotate(e);
     });
 
-    canvas.addEventListener("touchmove", (e) => {
-        isRotating = true;
+    canvas.addEventListener("touchstart", (e) => {
         const touch = e.targetTouches.item(0);
-        rotate(touch);
+        const pos = getCanvasCursorPosition(touch, gl.canvas);
+        old_pos.x = pos.x;
+        old_pos.y = pos.y;
+        isRotating = true;
+    });
+
+
+    canvas.addEventListener("touchend", (e) => {
         isRotating = false;
+    });
+
+    canvas.addEventListener("touchmove", (e) => {
+        const touch = e.targetTouches.item(0);
+        const pos = getCanvasCursorPosition(touch, gl.canvas);
+        old_pos.x = pos.x;
+        old_pos.y = pos.y;
+        rotate(touch);
     });
 
 
