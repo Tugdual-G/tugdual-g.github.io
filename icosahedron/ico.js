@@ -186,7 +186,7 @@ function addImageTexture(gl, imageSource){
 
     // Fill the texture with a 1x1 blue pixel.
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, 1, 1, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE,
-                  new Uint8Array([255]));
+                  new Uint8Array([0]));
     // gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 
     // Asynchronously load an image
@@ -383,7 +383,7 @@ function main() {
         }
     });
 
-    window.addEventListener('mousemove', e => {
+    function rotate(e){
         const pos = getCanvasCursorPosition(e, gl.canvas);
         if (isRotating) {
             let dx = -(pos.x - old_pos.x);
@@ -398,6 +398,17 @@ function main() {
         old_pos.x = pos.x;
         old_pos.y = pos.y;
 
+    }
+
+    window.addEventListener('mousemove', e => {
+        rotate(e);
+    });
+
+    canvas.addEventListener("touchmove", (e) => {
+        isRotating = true;
+        const touch = e.targetTouches.item(0);
+        rotate(touch);
+        isRotating = false;
     });
 
 
