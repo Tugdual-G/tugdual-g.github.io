@@ -435,7 +435,9 @@ function main() {
         gl.uniform4f(renderProgramOb.uniformLocations.q_inv, q_inv.q[0], q_inv.q[1], q_inv.q[2], q_inv.q[3]);
         gl.uniform1f(renderProgramOb.uniformLocations.t, t/400.0);
         gl.drawArrays(primitiveType, offset, count);
-        drawSelectedFace(gl, selectionProgramOb, q, q_inv);
+        if (isRotating){
+            drawSelectedFace(gl, selectionProgramOb, q, q_inv);
+        }
         requestAnimationFrame(animation);
 
     }
