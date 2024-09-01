@@ -31,6 +31,20 @@ img {
     height:auto;
 }
 
+figure {
+  display: flex;
+  flex-flow: column;
+  margin: auto;
+  padding: 0;
+  width:100%;
+}
+
+figcaption {
+  font: italic smaller sans-serif;
+  padding: 3px;
+  text-align: center;
+}
+
 h1{
     font-size: 40px;
     font-family: "Montserrat";
@@ -50,17 +64,23 @@ canvas {
     height: 25vw;
 }
 
+#rotation {
+    padding: 2px 2px;
+    max-width:15%;
+}
+
 .theme {
     display: none;
 }
 
 a:link {
-    color: lightyellow;
+    color: white;
     text-decoration: none;
 }
 
 a:visited {
-    color: lightskyblue;
+    color: black;
+    /* color: lightskyblue; */
 }
 
 a:focus {

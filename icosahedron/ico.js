@@ -228,6 +228,16 @@ function handleClickOnFace(face){
 
         case 0:
             break;
+        case 2:
+            // #cv
+            theme = document.querySelector("#cv");
+            about.innerHTML = theme.innerHTML;
+            break;
+        case 9:
+            // ?
+            theme = document.querySelector("#empty");
+            about.innerHTML = theme.innerHTML;
+            break;
         case 6:
             theme = document.querySelector("#trees");
             about.innerHTML = theme.innerHTML;
@@ -236,13 +246,25 @@ function handleClickOnFace(face){
             theme = document.querySelector("#bike");
             about.innerHTML = theme.innerHTML;
             break;
+        case 13:
+            theme = document.querySelector("#code");
+            about.innerHTML = theme.innerHTML;
+            break;
         case 14:
             theme = document.querySelector("#spoons");
             about.innerHTML = theme.innerHTML;
             break;
-        default:
-            theme = document.querySelector("#empty");
+        case 17:
+            theme = document.querySelector("#mathsPhysics");
             about.innerHTML = theme.innerHTML;
+            break;
+        case 19:
+            theme = document.querySelector("#sewing");
+            about.innerHTML = theme.innerHTML;
+            break;
+        default:
+            // theme = document.querySelector("#empty");
+            // about.innerHTML = theme.innerHTML;
             break;
 
     }
@@ -278,7 +300,8 @@ function drawSelectedFace(gl, selectionProgramOb, q, q_inv){
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 }
 
-function goToFaceLink(gl, selectionProgramOb){
+function goToFaceLink(gl, selectionProgramOb, q, q_inv){
+    drawSelectedFace(gl, selectionProgramOb, q, q_inv);
     gl.bindFramebuffer(gl.FRAMEBUFFER, selectionProgramOb.fb);
     gl.readPixels( 0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, selectionCoord);
     selectedFace = getFaceFromTexCoord(selectionCoord);
@@ -354,7 +377,7 @@ function main() {
     window.addEventListener('mouseup', e => {
         isRotating = false;
         if (Date.now() - t0 < 200){
-            goToFaceLink(gl, selectionProgramOb);
+            goToFaceLink(gl, selectionProgramOb, q, q_inv);
             console.log(q.q);
         }
     });
@@ -369,7 +392,6 @@ function main() {
             let q_rot = rotationQuaternion(-dy / velocity, -dx / velocity, 0.0, velocity * 1.5 );
             q = q_rot.mult(q);
             q_inv = q.inv();
-            // q_inv = q_inv.mult(q_rot.inv());
         }
         old_pos.x = pos.x;
         old_pos.y = pos.y;
@@ -435,9 +457,6 @@ function main() {
         gl.uniform4f(renderProgramOb.uniformLocations.q_inv, q_inv.q[0], q_inv.q[1], q_inv.q[2], q_inv.q[3]);
         gl.uniform1f(renderProgramOb.uniformLocations.t, t/400.0);
         gl.drawArrays(primitiveType, offset, count);
-        if (isRotating){
-            drawSelectedFace(gl, selectionProgramOb, q, q_inv);
-        }
         requestAnimationFrame(animation);
 
     }
