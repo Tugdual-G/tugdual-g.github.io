@@ -73,6 +73,10 @@ canvas {
     display: none;
 }
 
+#icoTheme {
+  scroll-margin-top: 25vh;
+}
+
 a:link {
     color: white;
     text-decoration: none;

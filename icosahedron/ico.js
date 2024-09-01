@@ -219,8 +219,12 @@ function getFaceFromTexCoord(texCoord){
 
 function handleClickOnFace(face){
     console.log(face);
-    let about = document.querySelector("#icoTheme");
+    let about = document.getElementById("icoTheme");
     let theme;
+    function handleTheme(){
+        about.innerHTML = theme.innerHTML;
+        about.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+    }
     switch (face){
         // case 1:
         //     window.open("http://localhost:8000/","_self")
@@ -231,36 +235,36 @@ function handleClickOnFace(face){
         case 2:
             // #cv
             theme = document.querySelector("#cv");
-            about.innerHTML = theme.innerHTML;
+            handleTheme();
             break;
         case 9:
             // ?
             theme = document.querySelector("#empty");
-            about.innerHTML = theme.innerHTML;
+            handleTheme();
             break;
         case 6:
             theme = document.querySelector("#trees");
-            about.innerHTML = theme.innerHTML;
+            handleTheme();
             break;
         case 12:
             theme = document.querySelector("#bike");
-            about.innerHTML = theme.innerHTML;
+            handleTheme();
             break;
         case 13:
             theme = document.querySelector("#code");
-            about.innerHTML = theme.innerHTML;
+            handleTheme();
             break;
         case 14:
             theme = document.querySelector("#spoons");
-            about.innerHTML = theme.innerHTML;
+            handleTheme();
             break;
         case 17:
             theme = document.querySelector("#mathsPhysics");
-            about.innerHTML = theme.innerHTML;
+            handleTheme();
             break;
         case 19:
             theme = document.querySelector("#sewing");
-            about.innerHTML = theme.innerHTML;
+            handleTheme();
             break;
         default:
             // theme = document.querySelector("#empty");
