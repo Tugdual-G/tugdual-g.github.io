@@ -163,7 +163,7 @@ export function createMaskProgram(gl, shape, frameBuffer){
         program: shaderProgram,
         fb: frameBuffer,
         fbShape: shape,
-        nvertices: 18,
+        nvertices: -1,
         attribLocations: {
             vertexPosition: attribLocs.loc,
         },

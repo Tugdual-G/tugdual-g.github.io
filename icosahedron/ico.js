@@ -238,9 +238,13 @@ function handleClickOnFace(face){
             theme = document.querySelector("#empty");
             handleTheme();
             break;
+
+        case 3:
+            window.location.href = 'waves.html'
+            break;
         case 9:
-            // ?
-            theme = document.querySelector("#empty");
+            // about
+            theme = document.querySelector("#about");
             handleTheme();
             break;
         case 6:
@@ -327,7 +331,7 @@ function main() {
     }
 
     // Initial orientation
-    let q = new Quaternion(0.070040762424469, 0.800381064414978, 0.42698973417282104, -0.30167156457901);
+    let q = new Quaternion(-0.39068326354026794, 0.4092947840690613, 0.5843455791473389, 0.48358404636383057);
     let q_inv = q.inv();
     let isRotating = false;
 

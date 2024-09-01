@@ -86,7 +86,7 @@ function initVertexBuffer(gl, programObject, vertices) {
 }
 
 function initCanvas(){
-    const canvas = document.querySelector("#webglCanvas");
+    const canvas = document.querySelector("#wavesCanvas");
     const gl = canvas.getContext("webgl2");
 
     if (!gl) {
@@ -158,7 +158,7 @@ function getTextBoundingBoxes(){
     let bboxHeight = 0.0;
 
 
-    let elem = document.querySelectorAll('h2');
+    let elem = document.querySelectorAll('#waveBack');
     let boundingBoxes = [];
 
     // let rect = elem.getBoundingClientRect();
@@ -169,8 +169,8 @@ function getTextBoundingBoxes(){
             x: (rect.left - canvasLeft) + rect.width / 2.0,
             y: canvasHeight - (rect.top - canvasTop + rect.height / 2.0),
         };
-        bboxWidth = rect.width/2.0 - 8;
-        bboxHeight = rect.height/2.0 - 8;
+        bboxWidth = rect.width/2.0 - 2;
+        bboxHeight = rect.height/2.0 - 2;
         console.log(rect.height);
         let bbox = {
             left: 2.0 * (bboxCenter.x - bboxWidth) / canvasWidth - 1.0,
@@ -211,7 +211,7 @@ function main() {
     const gl = initCanvas();
 
 
-    const canvas = document.querySelector("#webglCanvas");
+    const canvas = document.querySelector("#wavesCanvas");
     canvas.width = canvas.clientWidth;
     canvas.height = canvas.clientHeight;
     let canvas_shape = [canvas.width, canvas.height]; // canva domain_center_shape
@@ -292,9 +292,10 @@ function main() {
     gl.bindTexture(gl.TEXTURE_2D, mask);
 
 
-    const maskProgramObject = createMaskProgram(gl, mask_shape, maskFB);
 
     let maskVertices = getTextRectangleVertices();
+    const maskProgramObject = createMaskProgram(gl, mask_shape, maskFB);
+    maskProgramObject.nvertices = maskVertices.length/2;
 
     let maskBuffer = initVertexBuffer(gl, maskProgramObject,  maskVertices );
     draw(gl, maskProgramObject);

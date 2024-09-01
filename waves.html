@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="styles/wave.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital@0;1&display=swap" rel="stylesheet">
+        <title>About</title>
+        <meta
+        name="description"
+        content="Shallow water waves webgl model" />
+
+    </head>
+    <body>
+        <script>0</script>
+        <header>
+            <h1 id=name>Tugdual Gaillard</h1>
+            Computer Graphics | Scientific Computing
+        </header>
+
+        <div id="container">
+            <canvas id="wavesCanvas"></canvas>
+            <div id="fps"> fps : <span id="fpsValue">60.0</span></div>
+
+            <a href="index.html">
+                <img id="waveBack" src="images/icosahedron.svg" alt="the projection of an icosahedron" />
+            </a>
+
+        <footer>
+            <div class="social", id="github">
+                <a href="https://github.com/Tugdual-G" target="_blank">GitHub </a>
+            </div>
+
+            <div class="social", id="linkedin">
+                <a href="https://www.linkedin.com/in/tugdual-gaillard-b2503429a/" target="_blank">Linkedin </a>
+            </div>
+        </footer>
+
+        <script type="module" src="./shallow_waves/shaderPrograms.js"></script>
+        <script type="module" src="./shallow_waves/wave.js"></script>
+    </body>
+</html>

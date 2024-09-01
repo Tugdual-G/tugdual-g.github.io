@@ -16,11 +16,20 @@ html {
 
 body {
     /* overflow: hidden; */
-    margin:5% 25%;
+    margin:2% 25%;
     font-size: 34px;
     color: lightyellow;
     background: rgb(71,171,171);
     z-index: -1;
+}
+
+header {
+    /* display: flex; */
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    font-size: 24px;
+    margin-bottom: 5%;
 }
 
 img {
@@ -48,7 +57,11 @@ figcaption {
 h1{
     font-size: 40px;
     font-family: "Montserrat";
-    text-align: Left;
+    text-align: center;
+}
+
+#icoTheme h1 {
+    text-align: left;
 }
 
 h2{
@@ -69,6 +82,7 @@ canvas {
     padding: 2px 2px;
     max-width:10%;
 }
+
 
 .theme {
     display: none;
@@ -95,6 +109,17 @@ a:hover {
 }
 
 a:active {
+}
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    align-items: center;
+
+    font-family: 'FreeMonoBoldOblique';
+    font-size: 34px;
+    margin: 10% 10%;
 }
 
 /* Media query to hide side columns and top/bottom rows on small screens */
