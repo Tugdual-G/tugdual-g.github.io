@@ -234,7 +234,8 @@ function handleClickOnFace(face){
             break;
         case 2:
             // #cv
-            theme = document.querySelector("#cv");
+            // theme = document.querySelector("#cv");
+            theme = document.querySelector("#empty");
             handleTheme();
             break;
         case 9:
@@ -259,16 +260,18 @@ function handleClickOnFace(face){
             handleTheme();
             break;
         case 17:
-            theme = document.querySelector("#mathsPhysics");
+            // theme = document.querySelector("#mathsPhysics");
+            theme = document.querySelector("#empty");
             handleTheme();
             break;
         case 19:
-            theme = document.querySelector("#sewing");
+            // theme = document.querySelector("#sewing");
+            theme = document.querySelector("#empty");
             handleTheme();
             break;
         default:
-            // theme = document.querySelector("#empty");
-            // about.innerHTML = theme.innerHTML;
+            theme = document.querySelector("#empty");
+            handleTheme();
             break;
 
     }
