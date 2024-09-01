@@ -37,7 +37,6 @@ body {
     font-size: 24px;
 }
 
-
 #webglCanvas {
     position: relative;
     width: 100%;
@@ -106,14 +105,22 @@ img {
     left:50%;
     top:50%;
     transform: translate( -110px, -20px);
-    background-color: #00b1d4;
+    /* background-color: #00b1d4; */
+
+    text-shadow: 0 0;
+    color: grey;
+    background-color: lightgray;
 }
 
 #apps {
     left:50%;
     top:50%;
     transform: translate( 100px, -20px);
-    background-color: #00b1d4;
+    /* background-color: #00b1d4; */
+
+    text-shadow: 0 0;
+    color: grey;
+    background-color: lightgray;
 }
 
 
