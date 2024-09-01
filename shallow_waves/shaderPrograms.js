@@ -21,10 +21,14 @@ function compileShader(gl, source, type) {
   return shader;
 }
 
-function createProgram(gl, vertexShader, fragmentShader) {
+function createProgram(gl, vertexShader, fragmentShader, attribLocs) {
   let program = gl.createProgram();
   gl.attachShader(program, vertexShader);
   gl.attachShader(program, fragmentShader);
+
+  for (const attribLoc of attribLocs){
+    gl.bindAttribLocation(program, attribLoc.loc, attribLoc.name);
+  }
   gl.linkProgram(program);
   let success = gl.getProgramParameter(program, gl.LINK_STATUS);
   if (success) {
@@ -105,9 +109,13 @@ export function createBilinearRenderProgram(gl, fbShape, frameBuffer){
             color = vec4(c0 * intensity, 1.0);
         }
    `;
+
+    const attribLocs = [
+        {name:"a_position", loc:0},
+    ];
     const vertexShader = compileShader(gl, vertexShaderSource, gl.VERTEX_SHADER);
     const fragmentShader = compileShader(gl, renderFragmentShaderSource, gl.FRAGMENT_SHADER);
-    const shaderProgram = createProgram(gl, vertexShader, fragmentShader);
+    const shaderProgram = createProgram(gl, vertexShader, fragmentShader, attribLocs);
 
     let programObject = {
         program: shaderProgram,
@@ -115,7 +123,7 @@ export function createBilinearRenderProgram(gl, fbShape, frameBuffer){
         fb: frameBuffer,
         nvertices: 6,
         attribLocations: {
-            vertexPosition: gl.getAttribLocation(shaderProgram, "a_position"),
+            vertexPosition: attribLocs.loc,
         },
         uniformLocations: {
             fbShape: gl.getUniformLocation(shaderProgram, "fbShape"),
@@ -144,9 +152,12 @@ export function createMaskProgram(gl, shape, frameBuffer){
     `;
 
 
+    const attribLocs = [
+        {name:"a_position", loc:0},
+    ];
     const vertexShader = compileShader(gl, vertexShaderSource, gl.VERTEX_SHADER);
     const fragmentShader = compileShader(gl, initEtaFragmentShaderSource, gl.FRAGMENT_SHADER);
-    const shaderProgram = createProgram(gl, vertexShader, fragmentShader);
+    const shaderProgram = createProgram(gl, vertexShader, fragmentShader, attribLocs);
 
     let programObject = {
         program: shaderProgram,
@@ -154,7 +165,7 @@ export function createMaskProgram(gl, shape, frameBuffer){
         fbShape: shape,
         nvertices: 18,
         attribLocations: {
-            vertexPosition: gl.getAttribLocation(shaderProgram, "a_position"),
+            vertexPosition: attribLocs.loc,
         },
     };
 
@@ -220,10 +231,13 @@ export function createInitEtaProgram(gl, shape, domain_dimensions, frameBuffer){
         }
     `;
 
+    const attribLocs = [
+        {name:"a_position", loc:0},
+    ];
 
     const vertexShader = compileShader(gl, vertexShaderSource, gl.VERTEX_SHADER);
     const fragmentShader = compileShader(gl, initEtaFragmentShaderSource, gl.FRAGMENT_SHADER);
-    const initEtaShaderProgram = createProgram(gl, vertexShader, fragmentShader);
+    const initEtaShaderProgram = createProgram(gl, vertexShader, fragmentShader, attribLocs);
 
     let programObject = {
         program: initEtaShaderProgram,
@@ -231,7 +245,7 @@ export function createInitEtaProgram(gl, shape, domain_dimensions, frameBuffer){
         fbShape: shape,
         nvertices: 6,
         attribLocations: {
-            vertexPosition: gl.getAttribLocation(initEtaShaderProgram, "a_position"),
+            vertexPosition: attribLocs.loc,
         },
         uniformLocations: {
             shape: gl.getUniformLocation(initEtaShaderProgram, "shape"),
@@ -278,9 +292,12 @@ export function createUVProgram(gl, frameBuffer, UVShape, dx, dt, g){
         }
    `;
 
+    const attribLocs = [
+        {name:"a_position", loc:0},
+    ];
     const vertexShader = compileShader(gl, vertexShaderSource, gl.VERTEX_SHADER);
     const fragmentShader = compileShader(gl, fragmentShaderSource, gl.FRAGMENT_SHADER);
-    const shaderProgram = createProgram(gl, vertexShader, fragmentShader);
+    const shaderProgram = createProgram(gl, vertexShader, fragmentShader, attribLocs);
 
     let programObject = {
         program: shaderProgram,
@@ -288,7 +305,7 @@ export function createUVProgram(gl, frameBuffer, UVShape, dx, dt, g){
         fbShape: UVShape,
         nvertices: 6,
         attribLocations: {
-            vertexPosition: gl.getAttribLocation(shaderProgram, "a_position"),
+            vertexPosition: attribLocs.loc,
         },
         uniformLocations: {
             eta: gl.getUniformLocation(shaderProgram, "eta"),
@@ -378,9 +395,12 @@ export function createAdvecProgram(gl, etaShape, frameBuffer, dt, domain_dimensi
         }
    `;
 
+    const attribLocs = [
+        {name:"a_position", loc:0},
+    ];
     const vertexShader = compileShader(gl, vertexShaderSource, gl.VERTEX_SHADER);
     const fragmentShader = compileShader(gl, fragmentShaderSource, gl.FRAGMENT_SHADER);
-    const shaderProgram = createProgram(gl, vertexShader, fragmentShader);
+    const shaderProgram = createProgram(gl, vertexShader, fragmentShader, attribLocs);
 
     let programObject = {
         program: shaderProgram,
@@ -388,7 +408,7 @@ export function createAdvecProgram(gl, etaShape, frameBuffer, dt, domain_dimensi
         fbShape: etaShape,
         nvertices: 6,
         attribLocations: {
-            vertexPosition: gl.getAttribLocation(shaderProgram, "a_position"),
+            vertexPosition: attribLocs.loc,
         },
         uniformLocations: {
             eta: gl.getUniformLocation(shaderProgram, "eta"),
