@@ -79,12 +79,11 @@ canvas {
 
 a:link {
     color: white;
-    text-decoration: none;
+    /* text-decoration: none; */
 }
 
 a:visited {
-    color: black;
-    /* color: lightskyblue; */
+    color: lightskyblue;
 }
 
 a:focus {
