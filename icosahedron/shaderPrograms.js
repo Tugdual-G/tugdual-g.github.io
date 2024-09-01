@@ -166,13 +166,15 @@ function createShader(gl, type, source) {
   return undefined;
 }
 
-function createProgram(gl, vertexShader, fragmentShader) {
+function createProgram(gl, vertexShader, fragmentShader, attribLocs) {
   var program = gl.createProgram();
   gl.attachShader(program, vertexShader);
   gl.attachShader(program, fragmentShader);
-  gl.bindAttribLocation(program, 0, "a_position");
-  gl.bindAttribLocation(program, 1, "a_normal");
-  gl.bindAttribLocation(program, 2, "a_texCoord");
+
+
+  for (const attribLoc of attribLocs){
+    gl.bindAttribLocation(program, attribLoc.loc, attribLoc.name);
+  }
 
   gl.linkProgram(program);
   var success = gl.getProgramParameter(program, gl.LINK_STATUS);
@@ -186,20 +188,27 @@ function createProgram(gl, vertexShader, fragmentShader) {
 }
 
 export function createIcoProgram(gl){
+
+    const attribLocs = [
+        {name:"a_position", loc:0},
+        {name:"a_normal", loc:1},
+        {name:"a_texCoord", loc:2},
+    ];
+
+
     var vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
     var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
 
-    var program = createProgram(gl, vertexShader, fragmentShader);
+    var program = createProgram(gl, vertexShader, fragmentShader, attribLocs);
 
     let programObject = {
         program: program,
         nvertices: 20*3,
-        attribLocations: {
-            vertex: gl.getAttribLocation(program, "a_position"),
-            normal: gl.getAttribLocation(program, "a_normal"),
-            texCoord: gl.getAttribLocation(program, "a_texCoord"),
+        attribLocs:{
+            vertices: attribLocs[0],
+            normals: attribLocs[1],
+            texCoords: attribLocs[2],
         },
-
         uniformLocations: {
             tex: gl.getUniformLocation(program, "tex"),
             q: gl.getUniformLocation(program, "q"),
@@ -267,14 +276,23 @@ export function createSelectProgram(gl){
     var vertexShader = createShader(gl, gl.VERTEX_SHADER, selectVertexShaderSource);
     var fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, selectFragmentShaderSource);
 
-    var program = createProgram(gl, vertexShader, fragmentShader);
+
+    const attribLocs = [
+        {name:"a_position", loc:0},
+        {name:"a_normal", loc:1},
+        {name:"a_texCoord", loc:2},
+    ];
+
+
+    var program = createProgram(gl, vertexShader, fragmentShader, attribLocs);
 
     let programObject = {
         program: program,
         nvertices: 20*3,
-        attribLocations: {
-            vertex: gl.getAttribLocation(program, "a_position"),
-            texCoord: gl.getAttribLocation(program, "a_texCoord"),
+        attribLocs: {
+            vertices: attribLocs[0],
+            normals: attribLocs[1],
+            texCoords: attribLocs[2],
         },
 
         uniformLocations: {

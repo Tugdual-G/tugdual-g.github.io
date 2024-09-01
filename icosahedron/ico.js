@@ -7,6 +7,9 @@ let old_pos = {
     y:-1.0,
 };
 
+let selectionCoord = new Uint8Array(4);
+let selectedFace = 20;
+
 function getCursorPosition(event, target) {
     target = target || event.target;
     var rect = target.getBoundingClientRect();
@@ -117,59 +120,48 @@ function createIcoVertices(){
     return verticeAttrs;
 }
 
-function loadVerticeData(gl, verticeAttrs, programObject){
+function loadVerticeData(gl, verticeAttrs, attribLocs){
+
 
     let positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, verticeAttrs, gl.STATIC_DRAW);
 
-    // Create a vertex array object (attribute state)
     let vao = gl.createVertexArray();
 
-    // and make it the one we're currently working with
     gl.bindVertexArray(vao);
 
-    // Turn on the attribute
-    gl.enableVertexAttribArray(programObject.attribLocations.vertex);
+    let type = gl.FLOAT;
+    let normalize = false;
+    let stride = 8 * 4;
 
-    // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
+    gl.enableVertexAttribArray(attribLocs.vertices.loc);
+
     {
         let size = 3;
-        let type = gl.FLOAT;
-        let normalize = false;
-        let stride = 8 * 4;
         let offset = 0;
         gl.vertexAttribPointer(
-            programObject.attribLocations.vertex, size, type, normalize, stride, offset);
+            attribLocs.vertices.loc, size, type, normalize, stride, offset);
     }
 
-    // Turn on the attribute
-    gl.enableVertexAttribArray(programObject.attribLocations.normal);
+    gl.enableVertexAttribArray(attribLocs.normals.loc);
 
-    // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
     {
         let size = 3;
-        let type = gl.FLOAT;
-        let normalize = false;
-        let stride = 8 * 4;
         let offset = 3 * 4;
         gl.vertexAttribPointer(
-            programObject.attribLocations.normal, size, type, normalize, stride, offset);
+            attribLocs.normals.loc, size, type, normalize, stride, offset);
     }
 
-    // Turn on the attribute
-    gl.enableVertexAttribArray(programObject.attribLocations.texCoord);
+    gl.enableVertexAttribArray(attribLocs.texCoords.loc);
 
-    // Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
     {
         let size = 2;
-        let type = gl.FLOAT;
-        let normalize = false;
-        let stride = 8 * 4;
         let offset = 6 * 4;
         gl.vertexAttribPointer(
-            programObject.attribLocations.texCoord, size, type, normalize, stride, offset);
+            attribLocs.texCoords.loc, size, type, normalize, stride, offset);
     }
+
     let verticeAttrObject = {
         VAO:vao,
         VBO:positionBuffer,
@@ -180,20 +172,17 @@ function loadVerticeData(gl, verticeAttrs, programObject){
 
 function addImageTexture(gl, imageSource){
 
-    // Create a texture.
     var texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
 
     // Fill the texture with a 1x1 blue pixel.
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, 1, 1, 0, gl.LUMINANCE, gl.UNSIGNED_BYTE,
                   new Uint8Array([0]));
-    // gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
 
     // Asynchronously load an image
     var image = new Image();
     image.src = imageSource;
     image.addEventListener('load', function() {
-        // Now that the image has loaded make copy it to the texture.
         gl.bindTexture(gl.TEXTURE_2D, texture);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.LUMINANCE, gl.LUMINANCE,gl.UNSIGNED_BYTE, image);
 
@@ -259,6 +248,44 @@ function handleClickOnFace(face){
     }
 }
 
+function setFramebufferAttachmentSizes(gl, width, height, texture, depthBuffer) {
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+
+    const level = 0;
+    const internalFormat = gl.RGBA;
+    const border = 0;
+    const format = gl.RGBA;
+    const type = gl.UNSIGNED_BYTE;
+    const data = null;
+    gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
+                width, height, border,
+                format, type, data);
+
+    gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer);
+    gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, width, height);
+}
+
+function drawSelectedFace(gl, selectionProgramOb, q, q_inv){
+    gl.bindFramebuffer(gl.FRAMEBUFFER, selectionProgramOb.fb);
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    gl.viewport(0, 0, 1, 1);
+    gl.useProgram(selectionProgramOb.program);
+    gl.uniform4f(selectionProgramOb.uniformLocations.q, q.q[0], q.q[1], q.q[2], q.q[3]);
+    gl.uniform4f(selectionProgramOb.uniformLocations.q_inv, q_inv.q[0], q_inv.q[1], q_inv.q[2], q_inv.q[3]);
+    gl.uniform2f(selectionProgramOb.uniformLocations.cursorCoord, old_pos.x, old_pos.y);
+    gl.drawArrays(gl.TRIANGLES, 0, selectionProgramOb.nvertices);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+    gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+}
+
+function goToFaceLink(gl, selectionProgramOb){
+    gl.bindFramebuffer(gl.FRAMEBUFFER, selectionProgramOb.fb);
+    gl.readPixels( 0, 0, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, selectionCoord);
+    selectedFace = getFaceFromTexCoord(selectionCoord);
+    handleClickOnFace(selectedFace);
+    gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+}
+
 function main() {
     // Get A WebGL context
     let canvas = document.querySelector("#icoCanvas");
@@ -269,18 +296,17 @@ function main() {
         return;
     }
 
-    // 0.070040762424469, 0.800381064414978, 0.42698973417282104, -0.30167156457901
-    // let q = rotationQuaternion(1.0, 1.0, 0.0, 0.2);
+    // Initial orientation
     let q = new Quaternion(0.070040762424469, 0.800381064414978, 0.42698973417282104, -0.30167156457901);
     let q_inv = q.inv();
     let isRotating = false;
 
 
-    // ============  Text  texture ==============
+    // ============  Menu symbols  texture ==============
     let texture = addImageTexture(gl, "icosahedron/textureMenu.png");
 
 
-    // ============  Program  ================
+    // ============  Shader program  ================
     let renderProgramOb = createIcoProgram(gl);
     gl.useProgram(renderProgramOb.program);
     gl.uniform4f(renderProgramOb.uniformLocations.q, q.q[0], q.q[1], q.q[2], q.q[3]);
@@ -293,7 +319,7 @@ function main() {
 
     // ============  Vertices ==============
     let verticeAttrs = createIcoVertices();
-    let verticeAttrObject = loadVerticeData(gl, verticeAttrs, renderProgramOb);
+    let verticeAttrObject = loadVerticeData(gl, verticeAttrs, renderProgramOb.attribLocs);
 
     // ============ Selection ==============
     let selectionProgramOb = createSelectProgram(gl);
@@ -301,33 +327,14 @@ function main() {
     const selectTexture = gl.createTexture();
     gl.activeTexture(gl.TEXTURE1);
     gl.bindTexture(gl.TEXTURE_2D, selectTexture);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
 
     // create a depth renderbuffer
     const depthBuffer = gl.createRenderbuffer();
     gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer);
+    selectionProgramOb.db = depthBuffer;
 
-    function setFramebufferAttachmentSizes(width, height) {
-      gl.bindTexture(gl.TEXTURE_2D, selectTexture);
-
-      const level = 0;
-      const internalFormat = gl.RGBA;
-      const border = 0;
-      const format = gl.RGBA;
-      const type = gl.UNSIGNED_BYTE;
-      const data = null;
-      gl.texImage2D(gl.TEXTURE_2D, level, internalFormat,
-                    width, height, border,
-                    format, type, data);
-
-      gl.bindRenderbuffer(gl.RENDERBUFFER, depthBuffer);
-      gl.renderbufferStorage(gl.RENDERBUFFER, gl.DEPTH_COMPONENT16, width, height);
-    }
-
-    const selectFB = gl.createFramebuffer();
-    gl.bindFramebuffer(gl.FRAMEBUFFER, selectFB);
+    selectionProgramOb.fb = gl.createFramebuffer();
+    gl.bindFramebuffer(gl.FRAMEBUFFER, selectionProgramOb.fb);
 
     const attachmentPoint = gl.COLOR_ATTACHMENT0;
     const level = 0;
@@ -335,43 +342,8 @@ function main() {
 
     gl.framebufferRenderbuffer(gl.FRAMEBUFFER, gl.DEPTH_ATTACHMENT, gl.RENDERBUFFER, depthBuffer);
 
-    setFramebufferAttachmentSizes(1, 1);
+    setFramebufferAttachmentSizes(gl, 1, 1, selectTexture, selectionProgramOb.db);
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-
-    function drawSelectedFace(){
-        gl.bindFramebuffer(gl.FRAMEBUFFER, selectFB);
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-        gl.viewport(0, 0, 1, 1);
-        gl.useProgram(selectionProgramOb.program);
-        gl.uniform4f(selectionProgramOb.uniformLocations.q, q.q[0], q.q[1], q.q[2], q.q[3]);
-        gl.uniform4f(selectionProgramOb.uniformLocations.q_inv, q_inv.q[0], q_inv.q[1], q_inv.q[2], q_inv.q[3]);
-        gl.uniform2f(selectionProgramOb.uniformLocations.cursorCoord, old_pos.x, old_pos.y);
-        gl.drawArrays(primitiveType, offset, count);
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    }
-
-
-    let selectionCoord = new Uint8Array(4);
-    let selectedFace = 20;
-    function goToFaceLink(){
-        gl.bindFramebuffer(gl.FRAMEBUFFER, selectFB);
-        gl.readPixels(
-            0,                 // x
-            0,                 // y
-            1,                 // width
-            1,                 // height
-            gl.RGBA,
-            gl.UNSIGNED_BYTE,
-            selectionCoord);
-
-        selectedFace = getFaceFromTexCoord(selectionCoord);
-        handleClickOnFace(selectedFace);
-
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-    }
-
 
     let t0 = 0.0;
     canvas.addEventListener('mousedown', e => {
@@ -382,7 +354,7 @@ function main() {
     window.addEventListener('mouseup', e => {
         isRotating = false;
         if (Date.now() - t0 < 200){
-            goToFaceLink();
+            goToFaceLink(gl, selectionProgramOb);
             console.log(q.q);
         }
     });
@@ -463,7 +435,7 @@ function main() {
         gl.uniform4f(renderProgramOb.uniformLocations.q_inv, q_inv.q[0], q_inv.q[1], q_inv.q[2], q_inv.q[3]);
         gl.uniform1f(renderProgramOb.uniformLocations.t, t/400.0);
         gl.drawArrays(primitiveType, offset, count);
-        drawSelectedFace();
+        drawSelectedFace(gl, selectionProgramOb, q, q_inv);
         requestAnimationFrame(animation);
 
     }
