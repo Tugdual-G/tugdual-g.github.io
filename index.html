@@ -24,21 +24,24 @@
             Computer Graphics | Scientific Computing
         </header>
 
-        <nav>
+        <nav id="navMenu">
             <button class="dropBtn">menu ▼</button>
             <div class="dropdown">
-                <div class="menu-item">About</div>
-                <div class="menu-item">Code</div>
-                <div class="menu-item">Waves</div>
-                <div class="menu-item">CV</div>
+                <div class="menu-item" action="about">About</div>
+                <div class="menu-item" action="code">Code</div>
+                <!-- <div class="menu-item" action="linux">Linux</div> -->
+                <div class="menu-item" action="waves">Waves</div>
+                <!-- <div class="menu-item" action="spoons">Spoons</div>
+                     <div class="menu-item" action="bike">Bike</div> -->
+                <div class="menu-item" action="roll">Roll</div>
+                <div class="menu-item" action="cv">CV</div>
             </div>
         </nav>
 
         <canvas id="icoCanvas"></canvas>
-        <div id="icoTheme">
-            <img src="images/rotation.png" id="rotation"/>
-            <!-- <img src="images/about.png" /> -->
-        </div>
+        <img src="images/rotation.png" id="rotation"/>
+
+        <div id="icoTheme"></div>
 
         <div  class="theme" id="empty">
             <h1> This section is empty</h1>
@@ -132,17 +135,17 @@
 
         </div>
 
-        <div  class="theme" id="mathsPhysics">
-            <h1> Maths and Physics</h1>
-        </div>
+        <!-- <div  class="theme" id="mathsPhysics">
+             <h1> Maths and Physics</h1>
+             </div>
 
-        <div  class="theme" id="cv">
-            <h1>CV</h1>
-        </div>
+             <div  class="theme" id="cv">
+             <h1>CV</h1>
+             </div>
 
-        <div  class="theme" id="sewing">
-            <h1>Pattern design and sewing</h1>
-        </div>
+             <div  class="theme" id="sewing">
+             <h1>Pattern design and sewing</h1>
+             </div> -->
 
         <footer>
             <div class="social", id="github">

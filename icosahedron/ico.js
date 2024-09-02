@@ -2,6 +2,45 @@
 import { createIcoProgram, createSelectProgram } from "./shaderPrograms.js"
 import { Quaternion, rotationQuaternion } from "./quaternions.js"
 
+const faceToTheme = new Map();
+faceToTheme.set(2, "cv");
+faceToTheme.set(3, "waves");
+faceToTheme.set(9, "about");
+faceToTheme.set(6, "trees");
+faceToTheme.set(7, "linux");
+faceToTheme.set(12, "bike");
+faceToTheme.set(13, "code");
+faceToTheme.set(14, "spoons");
+// faceToTheme.set(17, "mathPhysics");
+faceToTheme.set(17, "empty");
+// faceToTheme.set(19, "sewing");
+faceToTheme.set(19, "empty");
+faceToTheme.set(20, "empty");
+
+const faceToQuat = new Map();
+faceToQuat.set(0, [ -0.2632948160171509, -0.8156597018241882, 0.05183764919638634, -0.25364285707473755 ]);
+faceToQuat.set(1, [ 0.868914783000946, 0.010217682458460331, -0.1519174724817276, -0.15255436301231384 ]);
+faceToQuat.set(2,  [ -0.7306313514709473, 0.3647196292877197, -0.19296707212924957, 0.42189446091651917 ]);
+faceToQuat.set(3, [ 0.019788552075624466, -0.6353718042373657, -0.3843146860599518, -0.504227876663208 ]);
+faceToQuat.set(4, [ -0.31990063190460205, 0.4686611294746399, 0.7205129265785217, -0.2146582007408142 ]);
+faceToQuat.set(5, [ -0.6156808733940125, -0.06606721878051758, 0.6141132116317749, -0.2152601182460785 ]);
+faceToQuat.set(6, [ -0.6449180245399475, 0.21630069613456726, 0.6409308910369873, 0.1172584816813469 ]);
+faceToQuat.set(7, [ -0.805505633354187, 0.2857809066772461, 0.2967551648616791, 0.25658151507377625 ]);
+faceToQuat.set(8,  [ 0.7286338806152344, -0.4514775574207306, -0.17427583038806915, -0.15438498556613922 ]);
+faceToQuat.set(9, [ 0.32906997203826904, -0.42198479175567627, -0.5955416560173035, -0.46342310309410095 ]);
+faceToQuat.set(10, [ -0.453665167093277, 0.2709401249885559, 0.7761552929878235, 0.09751682728528976 ]);
+faceToQuat.set(11, [ -0.7586727142333984, 0.031321506947278976, -0.08594036847352982, 0.4751448333263397 ]);
+faceToQuat.set(12, [ -0.15740399062633514, -0.40496015548706055, -0.19027447700500488, 0.8046911954879761 ]);
+faceToQuat.set(13, [ -0.19778423011302948, 0.3824578821659088, 0.751007080078125, -0.3697231709957123 ]);
+faceToQuat.set(14, [ 0.10007303953170776, 0.04037787765264511, 0.911658763885498, 0.03205632418394089 ]);
+faceToQuat.set(15, [ 0.48557230830192566, 0.23032528162002563, 0.5914286971092224, 0.37832409143447876 ]);
+faceToQuat.set(16, [ 0.4910920560359955, 0.4042074382305145, 0.5893021821975708, 0.17473021149635315 ]);
+faceToQuat.set(17, [ -0.4248988926410675, 0.0891469344496727, -0.38210350275039673, 0.7348645329475403 ]);
+faceToQuat.set(18, [ -0.5394981503486633, -0.40847986936569214, -0.35030096769332886, 0.4757739007472992 ]);
+faceToQuat.set(19, [ 0.053100358694791794, 0.14549708366394043, 0.7960253953933716, -0.43381041288375854 ]);
+
+const themeToFace = new Map(Array.from(faceToTheme, a => a.reverse()))
+
 let old_pos = {
     x:-1.0,
     y:-1.0,
@@ -219,63 +258,29 @@ function getFaceFromTexCoord(texCoord){
 
 function handleClickOnFace(face){
     console.log(face);
-    let about = document.getElementById("icoTheme");
-    let theme;
+    let icoTheme = document.getElementById("icoTheme");
+    let theme ;
     function handleTheme(){
-        about.innerHTML = theme.innerHTML;
-        about.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+        if (theme == null){
+            theme = document.getElementById("empty");
+        }
+        icoTheme.innerHTML = theme.innerHTML;
+        icoTheme.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
     }
     switch (face){
-        // case 1:
-        //     window.open("http://localhost:8000/","_self")
-        //     break;
-
         case 0:
             break;
-        case 2:
-            // #cv
-            // theme = document.querySelector("#cv");
-            theme = document.querySelector("#empty");
-            handleTheme();
-            break;
-
         case 3:
             window.location.href = 'waves.html'
             break;
-        case 9:
-            // about
-            theme = document.querySelector("#about");
-            handleTheme();
-            break;
-        case 6:
-            theme = document.querySelector("#trees");
-            handleTheme();
-            break;
-        case 12:
-            theme = document.querySelector("#bike");
-            handleTheme();
-            break;
-        case 13:
-            theme = document.querySelector("#code");
-            handleTheme();
-            break;
-        case 14:
-            theme = document.querySelector("#spoons");
-            handleTheme();
-            break;
-        case 17:
-            // theme = document.querySelector("#mathsPhysics");
-            theme = document.querySelector("#empty");
-            handleTheme();
-            break;
-        case 19:
-            // theme = document.querySelector("#sewing");
-            theme = document.querySelector("#empty");
-            handleTheme();
-            break;
         default:
-            theme = document.querySelector("#empty");
-            handleTheme();
+            if (faceToTheme.has(face)){
+                theme = document.getElementById(faceToTheme.get(face));
+                handleTheme();
+            }else{
+                theme = document.getElementById("empty");
+                handleTheme();
+            }
             break;
 
     }
@@ -320,7 +325,72 @@ function goToFaceLink(gl, selectionProgramOb, q, q_inv){
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 }
 
+function initSmootRotation(rotationObj, face, q_from){
+    if (faceToQuat.has(face)){
+        let faceQuat = new Quaternion(faceToQuat.get(face));
+
+        faceQuat = faceQuat.mult(q_from.inv()).normalize();
+
+        let alpha = 2.0 * Math.acos(faceQuat.q[0]);
+
+        rotationObj.d_alpha = alpha / rotationObj.maxFrames;
+
+        let axis = [faceQuat.q[1], faceQuat.q[2], faceQuat.q[3]];
+        let norm = Math.sqrt(axis[0]*axis[0] + axis[1]*axis[1] + axis[2]*axis[2]);
+        rotationObj.axis = axis.map((x) => x / norm);
+        rotationObj.frame = 0;
+    }
+}
+
+function randomRoll(rotationObj, q){
+    initSmootRotation(rotationObj, Date.now()%19, q);
+    rotationObj.d_alpha += (rotationObj.d_alpha * rotationObj.maxFrames + 2.0 * 3.14159);
+    rotationObj.maxFrames = 100;
+    rotationObj.d_alpha /= rotationObj.maxFrames;
+}
+
+function clickOnMenu(event, q, rotationObj){
+    const target = event.target;
+    let face = -1;
+    if (target.className === "menu-item") {
+        const action = target.getAttribute("action");
+        if (themeToFace.has(action)){
+            face = themeToFace.get(action);
+            initSmootRotation(rotationObj, face, q);
+            handleClickOnFace(face);
+        }else if (action === "roll"){
+            randomRoll(rotationObj, q);
+        }else {
+            handleClickOnFace(20);
+        }
+    }
+}
+
 function main() {
+
+    // Initial orientation
+    let q = new Quaternion([ 0.3777867555618286, -0.42694273591041565, -0.5319589972496033, -0.45036014914512634 ]);
+    let q_inv = q.inv();
+    let isRotating = false;
+    let menuRotationOb = {
+        frame : 40,
+        maxFrames : 40,
+        d_alpha: 0.0,
+        axis: [0.0, 0.0, 0.0],
+    }
+
+
+    const menu = document.getElementById('navMenu');
+
+    menu.addEventListener('click', event => {
+        clickOnMenu(event, q, menuRotationOb);
+    });
+
+    menu.addEventListener("touchstart", (e) => {
+        let touch = e.targetTouches.item(0);
+        clickOnMenu(touch, q, menuRotationOb);
+    });
+
     // Get A WebGL context
     let canvas = document.querySelector("#icoCanvas");
     canvas.width = canvas.clientWidth;
@@ -329,12 +399,6 @@ function main() {
     if (!gl) {
         return;
     }
-
-    // Initial orientation
-    let q = new Quaternion(-0.39068326354026794, 0.4092947840690613, 0.5843455791473389, 0.48358404636383057);
-    let q_inv = q.inv();
-    let isRotating = false;
-
 
     // ============  Menu symbols  texture ==============
     let texture = addImageTexture(gl, "icosahedron/textureMenu.png");
@@ -461,7 +525,20 @@ function main() {
     let count = renderProgramOb.nvertices;
 
     requestAnimationFrame(animation);
+
+    function smootRotate(rotationObj){
+        rotationObj.frame += 1;
+        let transform = rotationQuaternion(rotationObj.axis[0],
+                                rotationObj.axis[1],
+                                rotationObj.axis[2],
+                                rotationObj.d_alpha)
+        q = transform.mult(q);
+        q_inv = q.inv();
+    }
     function animation(t){
+        if (menuRotationOb.frame < menuRotationOb.maxFrames){
+            smootRotate(menuRotationOb);
+        }
         gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
         gl.useProgram(renderProgramOb.program);
         gl.uniform4f(renderProgramOb.uniformLocations.q, q.q[0], q.q[1], q.q[2], q.q[3]);
