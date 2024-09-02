@@ -76,6 +76,7 @@ canvas {
     width: 25vw;
     height: 25vw;
     cursor: pointer;
+    touch-action: none;
 }
 
 #rotation {
@@ -90,6 +91,7 @@ canvas {
 
 #icoTheme {
   scroll-margin-top: 25vh;
+  min-height: 50%;
 }
 
 a:link {
@@ -130,7 +132,6 @@ footer {
     }
 
     canvas {
-        touch-action: none;
         margin: auto;
         display: block;
         width: 50vw;

@@ -222,7 +222,7 @@ function main() {
 
     // Check if the user is accessing the page on a mobile device
     var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    if (isMobile) { nx = 128; dt = 0.08; }
+    if (isMobile) { nx = 128; dt = 0.062; }
 
     let ny = Math.round(nx*aspect_ratio);
     let domain_center_shape = [nx, ny];
@@ -234,8 +234,7 @@ function main() {
     let domain_dimensions = [Lx, Ly];
 
 
-
-    window.addEventListener('mousemove', e => {
+    function movements(e){
         const pos = getCanvasCursorPosition(e, gl.canvas);
 
         cursor.velocity = (pos.x - old_pos.x)*(pos.x - old_pos.x) + (pos.y - old_pos.y)*(pos.y - old_pos.y);
@@ -249,6 +248,16 @@ function main() {
         cursor.x = pos.x / gl.canvas.width;
         cursor.y = 1.0 - pos.y / gl.canvas.height;
         // console.log(cursor.x);
+
+    }
+
+    canvas.addEventListener("touchmove", (e) => {
+        let touch = e.targetTouches.item(0);
+        movements(touch);
+    });
+
+    window.addEventListener('mousemove', e => {
+        movements(e);
     });
 
     window.addEventListener('click', e => {
