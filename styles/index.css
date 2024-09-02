@@ -73,8 +73,8 @@ h2{
 canvas {
     margin: auto;
     display: block;
-    width: 25vw;
-    height: 25vw;
+    width: 50vh;
+    height: 50vh;
     cursor: pointer;
     touch-action: none;
 }
@@ -124,8 +124,7 @@ footer {
     margin: 10% 10%;
 }
 
-/* Media query to hide side columns and top/bottom rows on small screens */
-@media (max-width: 1000px) {
+@media (max-width: 1000px) and (orientation: portrait) {
 
     body {
         margin:5% 5%;
@@ -134,7 +133,14 @@ footer {
     canvas {
         margin: auto;
         display: block;
-        width: 50vw;
-        height: 50vw;
+        width: 80vw;
+        height: 80vw;
+    }
+}
+
+@media (max-width: 1000px) and (orientation: landscape) {
+
+    body {
+        margin:5% 5%;
     }
 }
