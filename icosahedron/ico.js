@@ -380,15 +380,20 @@ function main() {
     }
 
 
-    const menu = document.getElementById('navMenu');
+    const menu = document.getElementById('dropDownMenu');
 
     menu.addEventListener('click', event => {
         clickOnMenu(event, q, menuRotationOb);
     });
 
+    let t0 = 0.0;
     menu.addEventListener("touchstart", (e) => {
-        let touch = e.targetTouches.item(0);
-        clickOnMenu(touch, q, menuRotationOb);
+        t0 = Date.now();
+    });
+    menu.addEventListener("touchend", (e) => {
+        if (Date.now() - t0 < 200){
+            clickOnMenu(e, q, menuRotationOb);
+        }
     });
 
     // Get A WebGL context
@@ -443,7 +448,6 @@ function main() {
     setFramebufferAttachmentSizes(gl, 1, 1, selectTexture, selectionProgramOb.db);
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);
 
-    let t0 = 0.0;
     canvas.addEventListener('mousedown', e => {
         isRotating = true;
         t0 = Date.now();
@@ -453,7 +457,6 @@ function main() {
         isRotating = false;
         if (Date.now() - t0 < 200){
             goToFaceLink(gl, selectionProgramOb, q, q_inv);
-            console.log(q.q);
         }
     });
 

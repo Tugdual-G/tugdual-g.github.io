@@ -74,6 +74,7 @@ nav{
     padding-top: 0;
     padding-left: 2vw;
     max-width: 20vw;
+    /* touch-action: none; */
 }
 
 .dropBtn {
@@ -90,7 +91,7 @@ nav{
     color: lightpink;
 }
 
-.dropdown {
+.dropDown {
     display: none;
     padding: 1vw;
     /* border-left: 4px solid; */
@@ -98,6 +99,7 @@ nav{
     border-bottom: 4px solid;
     background-color: rgb(71,171,171);
     z-index: 1;
+    touch-action: none;
 }
 
 .menu-item {
@@ -111,19 +113,19 @@ nav{
     color: lightpink;
 }
 
-nav:hover .dropdown {
+nav:hover .dropDown {
     position: absolute;
     display: flex;
     flex-direction: column;
 }
 
-/* button:active ~ .dropdown { */
+/* button:active ~ .dropDown { */
 /*     position: absolute; */
 /*     display: flex; */
 /*     flex-direction: column; */
 /* } */
 
-button:focus ~ .dropdown {
+button:focus ~ .dropDown {
     position: absolute;
     display: flex;
     flex-direction: column;
