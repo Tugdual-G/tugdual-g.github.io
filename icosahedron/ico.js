@@ -271,7 +271,6 @@ function handleClickOnFace(face){
         case 0:
             break;
         case 3:
-            window.location.href = 'waves.html'
             break;
         default:
             if (faceToTheme.has(face)){
