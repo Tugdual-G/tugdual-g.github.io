@@ -10,7 +10,9 @@
         <meta
         name="description"
         content="Shallow water waves webgl model" />
-
+        <script id="MathJax-script" async
+                src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+        </script>
     </head>
     <body>
         <script>0</script>
@@ -27,6 +29,19 @@
                 <img src="images/icosahedron.svg" alt="the projection of an icosahedron" />
             </a>
         </div>
+
+        <p>
+            \begin{equation*}
+                \begin{cases}
+                    \frac{\partial h}{\partial t} + \frac{\partial u_i}{\partial x_i} = 0 \\
+                    \frac{\partial u_i}{\partial t} = - \frac{\partial h }{\partial x_i}
+                \end{cases}
+            \end{equation*}
+        </p>
+        <p>
+            <i>This GPU code integrates a simplified shallow-water wave equation system via the leapfrog method
+                and an upwind scheme.</i>
+        </p>
 
         <footer>
             <div class="social", id="github">
