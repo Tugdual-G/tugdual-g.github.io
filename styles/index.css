@@ -70,6 +70,7 @@ figcaption {
 }
 
 nav{
+    font-family: "Montserrat", sans-serif;
     position: absolute;
     top : 5vh;
     padding-top: 0;
