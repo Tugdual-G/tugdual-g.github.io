@@ -3,19 +3,20 @@ import { createIcoProgram, createSelectProgram } from "./shaderPrograms.js"
 import { Quaternion, rotationQuaternion } from "./quaternions.js"
 
 const faceToTheme = new Map();
+faceToTheme.set(0, "");
+// faceToTheme.set(1, "empty");
 faceToTheme.set(2, "cv");
 faceToTheme.set(3, "waves");
+// faceToTheme.set(4, "empty");
+// faceToTheme.set(5, "empty");
 faceToTheme.set(9, "about");
 faceToTheme.set(6, "trees");
 faceToTheme.set(7, "linux");
 faceToTheme.set(12, "bike");
 faceToTheme.set(13, "code");
 faceToTheme.set(14, "spoons");
-// faceToTheme.set(17, "mathPhysics");
-faceToTheme.set(17, "empty");
-// faceToTheme.set(19, "sewing");
-faceToTheme.set(19, "empty");
-faceToTheme.set(20, "empty");
+faceToTheme.set(17, "mathsPhysics");
+faceToTheme.set(19, "sewing");
 
 const faceToQuat = new Map();
 faceToQuat.set(0, [ -0.2632948160171509, -0.8156597018241882, 0.05183764919638634, -0.25364285707473755 ]);
@@ -259,26 +260,17 @@ function getFaceFromTexCoord(texCoord){
 function handleClickOnFace(face){
     console.log(face);
     let icoTheme = document.getElementById("icoTheme");
-    let theme ;
-    function handleTheme(){
-        if (theme == null){
-            theme = document.getElementById("empty");
-        }
-        icoTheme.innerHTML = theme.innerHTML;
-        icoTheme.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
-    }
     switch (face){
         case 0:
             break;
         case 3:
+            window.location.href = "waves.html" ;
             break;
         default:
             if (faceToTheme.has(face)){
-                theme = document.getElementById(faceToTheme.get(face));
-                handleTheme();
-            }else{
-                theme = document.getElementById("empty");
-                handleTheme();
+                window.location.hash = "#!" + faceToTheme.get(face);
+                goToHash();
+                icoTheme.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
             }
             break;
 
@@ -365,7 +357,29 @@ function clickOnMenu(event, q, rotationObj){
     }
 }
 
+function goToHash(){
+    let urlThemeStr = window.location.hash;
+    if (urlThemeStr.length > 1){
+        urlThemeStr = urlThemeStr.slice(2);
+        let icoTheme = document.getElementById("icoTheme");
+        let urlHashTheme = document.getElementById(urlThemeStr);
+        if (urlHashTheme === null){
+            return;
+        }
+        if (urlHashTheme.innerHTML.length < 100 ){
+            console.log("empty");
+            urlHashTheme = document.getElementById("empty");
+        }
+
+        icoTheme.innerHTML = urlHashTheme.innerHTML;
+        return;
+    }
+}
+
 function main() {
+
+    // So that the pages sections can be shared by link
+    goToHash();
 
     // Initial orientation
     let q = new Quaternion([ 0.3777867555618286, -0.42694273591041565, -0.5319589972496033, -0.45036014914512634 ]);
@@ -377,7 +391,6 @@ function main() {
         d_alpha: 0.0,
         axis: [0.0, 0.0, 0.0],
     }
-
 
     const menu = document.getElementById('dropDownMenu');
 
