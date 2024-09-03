@@ -19,6 +19,7 @@ body {
     min-height: 100vh;
     flex-direction: column;
     margin:0% 25%;
+    font-family: "Nimbus Roman", Georgia, serif;
     font-size: 34px;
     color: lightyellow;
     background: rgb(71,171,171);
