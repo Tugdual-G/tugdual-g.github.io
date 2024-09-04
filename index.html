@@ -6,14 +6,13 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital@0;1&display=swap" rel="stylesheet">
-        <title>About</title>
+        <title>Tugdual Gaillard</title>
         <meta
         name="description"
         content="Tugdual Gaillard personal website" />
-        <link rel="prefetch" href="icosahedron/textureMenu.png" /
+        <link rel="prefetch" href="icosahedron/textureMenu.png" />
     </head>
     <body>
-        <script>0</script>
 
         <header>
             <h1 id=name>Tugdual Gaillard</h1>
@@ -21,17 +20,27 @@
         </header>
 
         <nav id="navMenu">
-            <button class="dropBtn">menu ▼</button>
-            <div class="dropDown" id="dropDownMenu">
-                <a href="#!about" class="menu-item" action="about">About</a>
-                <a href="#!code" class="menu-item" action="code">Code</a>
+            <button class="dropBtn" id="menuBtn"> menu ▼</button>
+            <ul class="dropDown" id="dropDownMenu">
+                <li>
+                    <a href="#!about" class="menu-item" action="about">About</a>
+                </li>
+                <li>
+                    <a href="#!code" class="menu-item" action="code">Code</a>
+                </li>
                 <!-- <a href="#!" class="menu-item" action="linux">Linux</a> -->
-                <a href="waves.html" class="menu-item" action="waves">Don't</a>
+                <li>
+                    <a href="waves.html" class="menu-item" action="waves">Don't</a>
+                </li>
                 <!-- <a href="#!" class="menu-item" action="spoons">Spoons</a>
                      <a href="#!" class="menu-item" action="bike">Bike</a> -->
-                <a href="#!roll" class="menu-item" action="roll">Roll</a>
-                <a href="#!cv" class="menu-item" action="cv">CV</a>
-            </div>
+                <li>
+                    <a href="#!roll" class="menu-item" action="roll">Roll</a>
+                </li>
+                <li>
+                    <a href="#!cv" class="menu-item" action="cv">CV</a>
+                </li>
+            </ul>
         </nav>
 
         <canvas id="icoCanvas"></canvas>
@@ -203,7 +212,6 @@
         </footer>
 
         <script type="module" src="icosahedron/quaternions.js"></script>
-
         <script type="module" src="icosahedron/shaderPrograms.js"></script>
         <script type="module" src="icosahedron/ico.js"></script>
     </body>
