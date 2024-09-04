@@ -334,7 +334,8 @@ function initSmootRotation(rotationObj, face, q_from){
 }
 
 function randomRoll(rotationObj, q){
-    initSmootRotation(rotationObj, Date.now()%19, q);
+    const faces = [3, 6, 7, 12, 13, 14, 17, 19];
+    initSmootRotation(rotationObj, faces[Date.now()%8], q);
     rotationObj.d_alpha += (rotationObj.d_alpha * rotationObj.maxFrames + 2.0 * 3.14159);
     rotationObj.maxFrames = 100;
     rotationObj.d_alpha /= rotationObj.maxFrames;
