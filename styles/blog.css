@@ -1,0 +1,126 @@
+html {
+    z-index: -1;
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    max-width: 1000px;
+    margin:0 auto;
+    font-family: "Nimbus Roman", Georgia, serif;
+    font-size: 30px;
+    color: lightyellow;
+    background: #368585;
+    z-index: -1;
+}
+
+nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 1vh;
+}
+
+header {
+    font-size: 40px;
+    font-family: "Montserrat";
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    margin-bottom: 5%;
+}
+
+header a:visited{
+    color: lightyellow;
+}
+
+header a:hover{
+    color: lightpink;
+}
+
+header h1, header h2{
+    text-align: center;
+}
+
+section {
+    padding: 0 2vw;
+    border-left: solid 1px;
+}
+
+p {
+    margin:0.5em 0;
+}
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    align-items: center;
+    font-family: 'FreeMonoBoldOblique';
+    margin-bottom: 1vh;
+    margin-top: auto;
+    padding-top: 10vh;
+}
+
+img {
+    display: block;
+    margin: auto;
+    padding: 5% 0;
+    max-width:100%;
+    height:auto;
+}
+
+figure {
+  display: flex;
+  flex-flow: column;
+  margin: auto;
+  padding: 0;
+  width:100%;
+}
+
+figcaption {
+  font: italic smaller sans-serif;
+  padding: 3px;
+  text-align: center;
+}
+
+
+h1{
+    font-size: 42px;
+    font-family: "Montserrat";
+    text-align: left;
+}
+
+h2{
+    font-family: "Montserrat";
+    font-size: 36px;
+    text-align: left;
+}
+
+h3{
+    font-family: "Montserrat";
+    font-size: 32px;
+    text-align: left;
+}
+
+#posts a {
+    font-family: "Montserrat";
+    font-size: 36px;
+}
+
+code {
+    margin: 2vw;
+}
+
+a:link {
+    color: lightyellow;
+}
+
+a:visited {
+    color: lightskyblue;
+}
+
+a:hover {
+    color: lightpink;
+}
