@@ -8,6 +8,7 @@ body {
     flex-direction: column;
     max-width: 1000px;
     margin:0 auto;
+    padding: 0 5vw;
     font-family: "Nimbus Roman", Georgia, serif;
     font-size: 30px;
     color: lightyellow;

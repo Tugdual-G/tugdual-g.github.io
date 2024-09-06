@@ -19,6 +19,7 @@ body {
     min-height: 100vh;
     flex-direction: column;
     margin:0% 25%;
+    padding: 0 5vw;
     font-family: "Nimbus Roman", Georgia, serif;
     font-size: 30px;
     color: lightyellow;
@@ -184,7 +185,7 @@ a:active {
 @media (max-width: 1000px) and (orientation: portrait) {
 
     body {
-        margin:0% 2%;
+        margin:0% 5%;
     }
 
     canvas {
