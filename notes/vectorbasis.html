@@ -28,27 +28,28 @@
         <h1> Covariant and contravariant vectors </h1>
 
         <p>
-          When working with curvilinear or arbitrary coordinate systems
-          some problems are better described in therms of covariant or contravariant vectors.
-          For example, the conservation laws in geophysical fluid dynamics.
+          When working with curvilinear or arbitrary coordinate systems,
+          some problems are better described in terms of covariant or contravariant vectors.
+          For example,
+          the conservation laws in geophysical fluid dynamics.
         </p>
 
         <p>
-          These notes explains the relation between coordinates systems and their basis vector in order
-          to highligth the differences between covariant and contravariant vectors.
+          These notes explain the relation between coordinate systems and their basis vectors,
+          in order to highlight the differences between covariant and contravariant vectors.
         </p>
 
         <h2> Coordinates are made of scalar fields </h2>
         <section>
             <p>
-              It is usefull to recall that each coordinate's component is just a scalar field.
+              It is useful to recall that each coordinate component is just a scalar field.
               It is a trivial fact, but that is the easiest way to understand what covariant
               and contravariant vector really are.
             </p>
 
             <p>
               A common way of representing a coordinate system is to draw a grid.
-              A grid is made from the isolines of the coordinates fields, i.e,
+              A grid is made from the isolines of the coordinate fields, i.e,
               the \(x\) grid lines are the isolines of \(x\).
             </p>
 
@@ -61,14 +62,14 @@
         <h2> Vector basis </h2>
         <section>
           <p>
-            Lets take a vector \(v\) in a two dimensional space.
-            We want \(v\) to represent a spacial quantity
-            which should not depends on the way we measure space.
+            Lets take a vector \(v\) in a two-dimensional space.
+            We want \(v\) to represent a spatial quantity
+            which should not depend on the way we measure space.
           </p>
 
           <p>
             We can use a reference coordinate system,
-            let say the Cartesian coordinates \((x, y)\) ,
+            let's say the Cartesian coordinates \((x, y)\) ,
             and the associated vector basis \((e_x, e_y)\).
           </p>
 
@@ -80,16 +81,16 @@
           </p>
 
           <p>
-            The Cartesian coordinates will be used as a reference, i.e.
+            The Cartesian coordinates will be used as a reference, i.e.,
             the components of \(v\) will not change in the Cartesian system.
-            Why would we need that ?
-            Because otherwise, how would we know that something changed without any reference ?
+            Why would we need that?
+            Because otherwise, how would we know that something changed without any reference?
             But we have yet to create a vector basis in order to express the components of \(v\).
           </p>
 
           <p>
             There are two main ways of building a vector basis from a given coordinate system,
-            note that those basis can be local.
+            note that this basis can be local.
             Let's try both.
           </p>
 
@@ -101,7 +102,7 @@
             </p>
 
             <p>
-              This yield vectors which are tangent to the other coordinate's isolines
+              This yields vectors which are tangent to the other coordinate isolines
               (isosurfaces in 3D).
             </p>
 
@@ -113,10 +114,10 @@
 
 
             <p>
-              Now, what will happen if we divide the whole field \(q^1\) by two ?
-              We can see that the length of \(e_1\)  will be multiplied by two.
+              Now, what will happen if we divide the whole field \(q^1\) by two?
+              We can see that the length of \(e_1\)  will be multiplied by two.<br>
               \(v\) should stay the same, so the component \(v^1\) will be divided by two.
-              That's why the components \(v^i\) are called <i>contravariant</i> (relatively to the basis \(e_i\), and,
+              That's why the components \(v^i\) are called <i>contravariant</i> (relative to the basis \(e_i\), and,
               \(v^1 e_1 + v^2 e_2\) is called a contravariant vector.
               Contravariant components are written with upper indices.
             </p>
@@ -126,14 +127,14 @@
           <section>
 
             <p>
-              We can use the gradient of each coordinate to build another Vector basis for \((q^1, q^2)\),
+              We can use the gradient of each coordinate to build another vector basis for \((q^1, q^2)\),
               \[e^i = \nabla q^i \]
             </p>
 
             <p>
-              But how is the gradient defined ?
+              But how is the gradient defined?
               We could use our reference Cartesian basis to assess how \((q^1, q^2)\) and \((x, y)\) are related.
-              However, we should not really care, since the gradient field doesn't depends on the coordinate system, and we do not need its expression.
+              However, we should not really care, since the gradient field doesn't depend on the coordinate system, and we do not need its expression.
             </p>
 
             <p>
@@ -151,7 +152,7 @@
 
 
             <p>
-              So we say that the components \(v_i\) are <i>covariant</i> (relatively to the previous basis \(e_i\)),
+              So we say that the components \(v_i\) are <i>covariant</i> (relative to the previous basis \(e_i\)),
               and that \(v_1 e^1 + v_2 e^2\) is a covariant vector.
               Covariant components are written with lower indices.
             </p>
@@ -161,7 +162,7 @@
         <h2> Conclusion </h2>
         <section>
         <p>
-          The name covariant and contravariant are given relatively to the \(e_i\) basis.
+          The name covariant and contravariant are given relative to the \(e_i\) basis.
           If we apply a transform \(M\) to the \(e_i\) basis,
 
           <ul>
@@ -180,22 +181,22 @@
         </p>
 
         <p>
-          The basis for covariant vectors is made from the contravariant vectors \(e^i\) .
+          The basis for covariant vectors is made from the contravariant vectors \(e^i\).
           That way the vector \(v\) stays the same after the transformations of \(e_i\).
         </p>
 
         <p>
           In the same fashion,
-          the basis for contravariant vectors is made from the covariant vectors \(e_i\) .
+          the basis for contravariant vectors is made from the covariant vectors \(e_i\).
         </p>
         </section>
 
         <footer>
-          <div class="social", id="github">
+          <div class="social" id="github">
             <a href="https://github.com/Tugdual-G" target="_blank">GitHub </a>
           </div>
 
-          <div class="social", id="linkedin">
+          <div class="social" id="linkedin">
             <a href="https://www.linkedin.com/in/tugdual-gaillard-b2503429a/" target="_blank">Linkedin </a>
           </div>
         </footer>
