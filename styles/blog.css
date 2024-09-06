@@ -66,7 +66,7 @@ footer {
 img {
     display: block;
     margin: auto;
-    padding: 5% 0;
+    padding: 1% 0;
     max-width:100%;
     height:auto;
 }
@@ -80,8 +80,8 @@ figure {
 }
 
 figcaption {
-  font: italic smaller sans-serif;
-  padding: 3px;
+  font: italic smaller serif;
+  padding-bottom: 2vh;
   text-align: center;
 }
 
