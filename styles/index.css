@@ -18,8 +18,8 @@ body {
     display: flex;
     min-height: 100vh;
     flex-direction: column;
-    margin:0% 25%;
-    padding: 0 5vw;
+    margin:0% 20%;
+    padding: 0 2vw;
     font-family: "Nimbus Roman", Georgia, serif;
     font-size: 30px;
     color: lightyellow;
@@ -73,7 +73,7 @@ nav{
     position: absolute;
     top : 5vh;
     padding-top: 0;
-    padding-left: 2vw;
+    padding-left: 0;
     max-width: 25vw;
     cursor: pointer;
     /* touch-action: none; */
@@ -97,8 +97,9 @@ nav ul {
     visibility: hidden;
     position: absolute;
     top:5px;
-    left:1vw;
-    padding: 1vw;
+    left:0vw;
+    padding-right: 1vw;
+    padding-left: 0;
     border-right: 4px solid;
     border-bottom: 4px solid;
     background-color: rgb(71,171,171);
