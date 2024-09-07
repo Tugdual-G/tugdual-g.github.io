@@ -11,6 +11,12 @@
         name="description"
         content="Explaination of the difference between covariant and contravariant vectors." />
 
+        <script>
+        MathJax = {
+          loader: {load: ['[tex]/boldsymbol']},
+          tex: {packages: {'[+]': ['boldsymbol']}}
+        };
+        </script>
         <script id="MathJax-script" async
                 src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
         </script>
@@ -60,20 +66,21 @@
         <h2> Vector bases </h2>
         <section>
           <p>
-            Lets take a vector \(v\) in a two-dimensional space.
-            We want \(v\) to represent a spatial quantity
+            Lets take a vector \(\boldsymbol{v}\) in a two-dimensional space.
+
+            We want \(\boldsymbol{v}\) to represent a spatial quantity
             which should not depend on the way we measure space.
           </p>
 
           <p>
             We can use a reference coordinate system,
             let's say the Cartesian coordinates \((x, y)\) ,
-            and the associated vector basis \((e_x, e_y)\).
+            and the associated vector basis \(\{\boldsymbol{e}_x, \boldsymbol{e}_y\}\).
           </p>
 
           <p>
             We can also use another arbitrary coordinate system,
-            with the coordinates \((q^1 , q^2)\), and the vector basis \((e_1, e_2)\).
+            with the coordinates \((q^1 , q^2)\), and the vector basis \( \{ \boldsymbol{e}_1, \boldsymbol{e}_2 \} \).
             This arbitrary coordinate system can be later transformed as we like.
             We do not know yet how to obtain the vector basis, but it doesn't matter.
           </p>
@@ -85,10 +92,10 @@
 
           <p>
             The Cartesian coordinates will be used as a reference, i.e.,
-            the components of \(v\) will not change in the Cartesian system.
+            the components of \(\boldsymbol{v}\) will not change in the Cartesian system.
             Why would we need that?
             Because otherwise, how would we know that something changed without any reference?
-            But we have yet to create a vector basis in order to express the components of \(v\).
+            But we have yet to create a vector basis in order to express the components of \(\boldsymbol{v}\).
           </p>
 
           <p>
@@ -101,7 +108,7 @@
           <section>
             <p>
               The most common way to obtain a basis is to take the derivative of the position of a point,
-              \[ e_i = \frac{\partial \vec{r}}{\partial q^i} \]
+              \[ \boldsymbol{e}_i = \frac{\partial \vec{r}}{\partial q^i} \]
             </p>
 
             <p>
@@ -110,18 +117,18 @@
             </p>
 
             <p>
-            The components of \(v\)  are written \(v^i\) and thus,
+            The components of \(\boldsymbol{v}\)  are written \(v^i\) and thus,
 
-            \[v = v^1 e_1 + v^2 e_2 \]
+            \[v = v^1 \boldsymbol{e}_1 + v^2 \boldsymbol{e}_2 \]
             </p>
 
 
             <p>
               Now, what will happen if we divide the whole field \(q^1\) by two?
-              We can see that the length of \(e_1\)  will be multiplied by two.<br>
-              \(v\) should stay the same, so the component \(v^1\) will be divided by two.
-              That's why the components \(v^i\) are called <i>contravariant</i> (relative to the \(e_i\) basis ), and,
-              \(v^1 e_1 + v^2 e_2\) is called a contravariant vector.
+              We can see that the length of \(\boldsymbol{e}_1\)  will be multiplied by two.<br>
+              \(\boldsymbol{v}\) should stay the same, so the component \(v^1\) will be divided by two.
+              That's why the components \(v^i\) are called <i>contravariant</i> (relative to the \(\boldsymbol{e}_i\) basis ), and,
+              \(v^1 \boldsymbol{e}_1 + v^2 \boldsymbol{e}_2\) is called a contravariant vector.
               Contravariant components are written with upper indices.
             </p>
 
@@ -136,7 +143,7 @@
 
             <p>
               We can use the gradient of each coordinate to build another vector basis for \((q^1, q^2)\),
-              \[e^i = \nabla q^i \]
+              \[\boldsymbol{e}^i = \nabla q^i \]
             </p>
 
             <p>
@@ -146,22 +153,22 @@
             </p>
 
             <p>
-              Thus, the vector \(v\) can be written,
-              \[v = v_1 e^1 + v_2 e^2\]
+              Thus, the vector \(\boldsymbol{v}\) can be written,
+              \[v = v_1 \boldsymbol{e}^1 + v_2 \boldsymbol{e}^2\]
             </p>
 
 
             <p>
               Again, we divide the field \(q^1\) by two.
-              We see that the length of \(e^1\) will also be divided by two.
+              We see that the length of \(\boldsymbol{e}^1\) will also be divided by two.
               In consequence, the component \(v_1\) has to be multiplied by two.
               That's the contrary of the previous basis.
             </p>
 
 
             <p>
-              So we say that the components \(v_i\) are <i>covariant</i> (relative to the previous basis \(e_i\)),
-              and that \(v_1 e^1 + v_2 e^2\) is a covariant vector.
+              So we say that the components \(v_i\) are <i>covariant</i> (relative to the previously described basis, \(\boldsymbol{e}_i\)),
+              and that \(v_1 \boldsymbol{e}^1 + v_2 \boldsymbol{e}^2\) is a covariant vector.
               Covariant components are written with lower indices.
             </p>
 
@@ -175,8 +182,8 @@
         <h2> Conclusion / Terminology </h2>
         <section>
         <p>
-          The name covariant and contravariant are given relative to the \(e_i\) basis.
-          Indeed, if we apply a transform \(M\) to the \(e_i\) basis,
+          The name covariant and contravariant are given relative to the \(\boldsymbol{e}_i\) basis.
+          Indeed, if we apply a transform \(M\) to the \(\boldsymbol{e}_i\) basis,
 
           <ul>
             <li>
@@ -189,25 +196,25 @@
         </p>
 
         <p>
-          Moreover, we see that the basis vectors \(e^i\) are contravariant,
-          and that the \(e_i\) are covariant (relatively to themselves).
+          Moreover, we see that the basis vectors \(\boldsymbol{e}^i\) are contravariant,
+          and that the \(\boldsymbol{e}_i\) are covariant (relatively to themselves).
         </p>
 
         <p>
-          The basis for covariant vectors is made from the contravariant vectors \(e^i\).
-          That way the vector \(v\) stays the same after the transformations of \(e_i\).
+          The basis for covariant vectors is made from the contravariant vectors \(\boldsymbol{e}^i\).
+          That way the vector \(\boldsymbol{v}\) stays the same after the transformations of \(\boldsymbol{e}_i\).
         </p>
 
         <p>
           In the same fashion,
-          the basis for contravariant vectors is made from the covariant vectors \(e_i\).
+          the basis for contravariant vectors is made from the covariant vectors \(\boldsymbol{e}_i\).
         </p>
 
         <p>
           It should have become clear that the terminology is quite misleading,
           a vector representing the physical world is the same independently of the way it is written.
           The terms covariant and contravariant should be used when talking about bases and components.
-          In fact, \(e_i\) and \(e^i\) do not even reside in the same space but that is another story.
+          In fact, \(\boldsymbol{e}_i\) and \(\boldsymbol{e}^i\) do not even reside in the same space but that is another story.
         </p>
 
         </section>
