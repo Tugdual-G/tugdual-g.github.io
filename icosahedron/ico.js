@@ -399,15 +399,15 @@ function main() {
         clickOnMenu(event, q, menuRotationOb);
     });
 
-    let t0 = 0.0;
-    menu.addEventListener("touchstart", (e) => {
-        t0 = Date.now();
-    });
-    menu.addEventListener("touchend", (e) => {
-        if (Date.now() - t0 < 200){
-            clickOnMenu(e, q, menuRotationOb);
-        }
-    });
+    // let t0 = 0.0;
+    // menu.addEventListener("touchstart", (e) => {
+    //     t0 = Date.now();
+    // });
+    // menu.addEventListener("touchend", (e) => {
+    //     if (Date.now() - t0 < 200){
+    //         clickOnMenu(e, q, menuRotationOb);
+    //     }
+    // });
 
     // Get A WebGL context
     let canvas = document.querySelector("#icoCanvas");
