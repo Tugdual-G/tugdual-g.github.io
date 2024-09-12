@@ -162,6 +162,7 @@ canvas {
 #icoTheme {
   scroll-margin-top: 25vh;
   min-height: 50%;
+  padding-bottom: 5vh;
 }
 
 a:link {
