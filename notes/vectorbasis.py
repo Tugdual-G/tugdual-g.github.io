@@ -87,7 +87,7 @@ ax[0].quiver(
     T_q1[0],
     T_q1[1],
     angles="xy",
-    color="b",
+    color="#616bff",
     scale=5,
     zorder=10,
     width=0.008,
@@ -99,7 +99,7 @@ ax[0].quiver(
     T_q2[0],
     T_q2[1],
     angles="xy",
-    color="r",
+    color="#ff5e5e",
     scale=5,
     zorder=10,
     width=0.008,
@@ -111,7 +111,7 @@ ax[1].quiver(
     T_q1[0],
     T_q1[1],
     angles="xy",
-    color="b",
+    color="#616bff",
     scale=5,
     zorder=10,
     width=0.008,
@@ -123,15 +123,15 @@ ax[1].quiver(
     2 * T_q2[0],
     2 * T_q2[1],
     angles="xy",
-    color="r",
+    color="#ff5e5e",
     scale=5,
     zorder=10,
     width=0.008,
 )
-ax[0].text(0.5, 0.35, "$e^1$", size=24, color="r")
-ax[0].text(0.22, 0.5, "$e^2$", size=24, color="b")
-ax[1].text(0.5, 0.35, "$e^1$", size=24, color="r")
-ax[1].text(0.22, 0.5, "$e^2$", size=24, color="b")
+ax[0].text(0.5, 0.35, "$e_1$", size=24, color="#ff5e5e")
+ax[0].text(0.22, 0.5, "$e_2$", size=24, color="#616bff")
+ax[1].text(0.5, 0.35, "$e_1$", size=24, color="#ff5e5e")
+ax[1].text(0.22, 0.5, "$e_2$", size=24, color="#616bff")
 
 
 ax[0].set_title(r"Original coordinates")
@@ -143,7 +143,8 @@ ax[1].set_ylabel("$y$")
 
 ax[0].set_aspect("equal")
 ax[1].set_aspect("equal")
-fig.savefig("q1q2transformedcontra.png", bbox_inches="tight", transparent=True)
+# fig.savefig("q1q2transformedcontra.png", bbox_inches="tight", transparent=True)
+plt.show()
 plt.close()
 
 fig, ax = plt.subplots(1, 2, figsize=(8, 16))
@@ -164,7 +165,7 @@ ax[0].quiver(
     g_q1[0],
     g_q1[1],
     angles="xy",
-    color="r",
+    color="#ff5e5e",
     scale=5,
     zorder=10,
     width=0.008,
@@ -176,7 +177,7 @@ ax[0].quiver(
     g_q2[0],
     g_q2[1],
     angles="xy",
-    color="b",
+    color="#616bff",
     scale=5,
     zorder=10,
     width=0.008,
@@ -188,7 +189,7 @@ ax[1].quiver(
     0.5 * g_q1[0],
     0.5 * g_q1[1],
     angles="xy",
-    color="r",
+    color="#ff5e5e",
     scale=5,
     zorder=10,
     width=0.008,
@@ -200,15 +201,15 @@ ax[1].quiver(
     g_q2[0],
     g_q2[1],
     angles="xy",
-    color="b",
+    color="#616bff",
     scale=5,
     zorder=10,
     width=0.008,
 )
-ax[0].text(0.5, 0.33, "$e^1$", size=24, color="r")
-ax[0].text(0.22, 0.5, "$e^2$", size=24, color="b")
-ax[1].text(0.5, 0.33, "$e^1$", size=24, color="r")
-ax[1].text(0.22, 0.5, "$e^2$", size=24, color="b")
+ax[0].text(0.5, 0.33, "$e^1$", size=24, color="#ff5e5e")
+ax[0].text(0.22, 0.5, "$e^2$", size=24, color="#616bff")
+ax[1].text(0.5, 0.33, "$e^1$", size=24, color="#ff5e5e")
+ax[1].text(0.22, 0.5, "$e^2$", size=24, color="#616bff")
 
 
 ax[0].set_title(r"Original coordinates")
@@ -220,5 +221,6 @@ ax[1].set_ylabel("$y$")
 
 ax[0].set_aspect("equal")
 ax[1].set_aspect("equal")
-fig.savefig("q1q2transformedcova.png", bbox_inches="tight", transparent=True)
+# fig.savefig("q1q2transformedcova.png", bbox_inches="tight", transparent=True)
+plt.show()
 plt.close()
