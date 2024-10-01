@@ -5,7 +5,7 @@ import { Quaternion, rotationQuaternion } from "./quaternions.js"
 const faceToTheme = new Map();
 faceToTheme.set(0, "");
 // faceToTheme.set(1, "empty");
-faceToTheme.set(2, "cv");
+// faceToTheme.set(2, "cv");
 faceToTheme.set(3, "waves");
 // faceToTheme.set(4, "empty");
 // faceToTheme.set(5, "empty");
