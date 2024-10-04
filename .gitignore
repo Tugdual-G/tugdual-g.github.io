@@ -4,3 +4,4 @@
 trip/
 *.xcf
 export.bash
+*.o

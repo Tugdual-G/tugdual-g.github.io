@@ -1,25 +1,10 @@
-function typeset(code) {
-  MathJax.startup.promise = MathJax.startup.promise
-    .then(() => MathJax.typesetPromise(code()))
-    .catch((err) => console.log('Typeset failed: ' + err.message));
-  return MathJax.startup.promise;
-}
+import { createF64Array, createCharArray, createPointerArray,
+         cStringLength, stringToChars, Components, Data } from "./harmonicsInterface.js"
+import { getPlotObj } from "./plot.js"
 
-function toScient(x){
-    let str = x.toExponential(3).replace(/e\+?/, ' \\cdot 10^{');
-    str += "}";
-    return str;
-}
+main();
 
-let txtArray;
-let t = null;
-let h = null;
-let h_mean = 0.0;
-let epoch = null;
-
-let pulsations = null;
-let amplitudes = null;
-let phases = null;
+const testResultDefault = "---------------  ,  ---------------  , ---------------";
 
 const COMPONENT_SPEEDS = new Map();
 COMPONENT_SPEEDS.set("H0", 0.0);
@@ -38,7 +23,7 @@ COMPONENT_SPEEDS.set("Mm", 0.5443747);  // Lunar monthly
 COMPONENT_SPEEDS.set("Ssa", 0.0821373); // Solar semiannual
 COMPONENT_SPEEDS.set("Sa", 0.0410686);  // Solar annual
 
-let components = {};
+let available_pulsations = {};
 {
     const comp_names = [];
     const comp_pul = [];
@@ -53,46 +38,65 @@ let components = {};
     for (let i = 1; i < 6; ++i){
         compute_comp[compute_comp.length-i] = false;
     }
-    components.names = comp_names;
-    components.pulsations = comp_pul;
-    components.compute = compute_comp;
-    components.period = comp_period;
-    components.comp_puls = [];
-    components.compStr = "";
+    available_pulsations.names = comp_names;
+    available_pulsations.pulsations = comp_pul;
+    available_pulsations.compute = compute_comp;
+    available_pulsations.period = comp_period;
+    available_pulsations.comp_puls = [];
+    available_pulsations.compStr = "";
 }
 
-function mean(arr){
-    let mean = 0.0;
-    arr.forEach((x)=> mean += x);
-    return mean / arr.length;
+
+
+function typeset(code) {
+  MathJax.startup.promise = MathJax.startup.promise
+    .then(() => MathJax.typesetPromise(code()))
+    .catch((err) => console.log('Typeset failed: ' + err.message));
+  return MathJax.startup.promise;
 }
 
-function getPulsations(){
-    components.comp_puls = [];
-    for (let i = 0; i<components.names.length; ++i){
-        if ( components.compute[i] == true ){
-            components.comp_puls.push(components.pulsations[i])
+function toScient(x){
+    let str = x.toExponential(3).replace(/e\+?/, ' \\cdot 10^{');
+    str += "}";
+    return str;
+}
+
+
+
+function fetchComponentsSelection(){
+    for (let i=0; i < available_pulsations.names.length; ++i){
+        available_pulsations.compute[i] = document.getElementById(`component${i}`).checked;
+    }
+}
+
+function getChosenPulsations(){
+    fetchComponentsSelection();
+    available_pulsations.comp_puls = [];
+    for (let i = 0; i<available_pulsations.names.length; ++i){
+        if ( available_pulsations.compute[i] == true ){
+            available_pulsations.comp_puls.push(available_pulsations.pulsations[i])
         }
     }
 }
 
-function fetchComponentsSelection(){
-    for (let i=0; i < components.names.length; ++i){
-        components.compute[i] = document.getElementById(`component${i}`).checked;
+function range(start, stop, array){
+    const dx = (start - stop) / array.length ;
+    for (let i = 0; i < array.length; ++i){
+        array[i] = i * dx + start;
     }
 }
 
-function initComponentsTable(){
+function initComponentsTable(available_pulsations){
     let htmlList = "";
     let i_computed = 0;
-    for (let i = 0; i< components.names.length; ++i){
+    for (let i = 0; i< available_pulsations.names.length; ++i){
         htmlList += "<tr>\n"
-        htmlList += `<td>  ${components.names[i]}  </td>\n`;
-        htmlList += `<td>  ${components.pulsations[i].toExponential(3)}  </td>\n`;
-        htmlList += `<td>  ${components.period[i].toExponential(3)}  </td>\n`;
+        htmlList += `<td>  ${available_pulsations.names[i]}  </td>\n`;
+        htmlList += `<td>  ${available_pulsations.pulsations[i].toExponential(3)}  </td>\n`;
+        htmlList += `<td>  ${available_pulsations.period[i].toExponential(3)}  </td>\n`;
         htmlList += `<td>---</td>\n`;
         htmlList += `<td>---</td>\n`;
-        if (components.compute[i]){
+        if (available_pulsations.compute[i]){
             htmlList += `<td>
                     <input type="checkbox" id="component${i}" name="scales" checked />
                 </td>\n`;
@@ -110,12 +114,12 @@ function initComponentsTable(){
 function fillComponentsTable(ampls, phases){
     let htmlList = "";
     let i_computed = 0;
-    for (let i = 0; i< components.names.length; ++i){
+    for (let i = 0; i< available_pulsations.names.length; ++i){
         htmlList += "<tr>\n"
-        htmlList += `<td>  ${components.names[i]}  </td>\n`;
-        htmlList += `<td>  ${components.pulsations[i].toExponential(3)}  </td>\n`;
-        htmlList += `<td>  ${components.period[i].toExponential(3)}  </td>\n`;
-        if (components.compute[i]){
+        htmlList += `<td>  ${available_pulsations.names[i]}  </td>\n`;
+        htmlList += `<td>  ${available_pulsations.pulsations[i].toExponential(3)}  </td>\n`;
+        htmlList += `<td>  ${available_pulsations.period[i].toExponential(3)}  </td>\n`;
+        if (available_pulsations.compute[i]){
             htmlList += `<td>  ${ampls[i_computed].toExponential(3)}  </td>\n`;
             htmlList += `<td>  ${phases[i_computed].toExponential(3)}  </td>\n`;
             htmlList += `<td>
@@ -135,17 +139,17 @@ function fillComponentsTable(ampls, phases){
 }
 
 function fillComponentsString(ampls, phases){
-    components.compStr = "#";
-    components.compStr += "t=0 reference datetime ";
-    components.compStr += epoch + "\n";
-    components.compStr += "#name pulsation(rad/h) amplitude(m) phase(rad)\n";
+    available_pulsations.compStr = "#";
+    available_pulsations.compStr += "t=0 reference datetime ";
+    available_pulsations.compStr += epoch + "\n";
+    available_pulsations.compStr += "#name pulsation(rad/h) amplitude(m) phase(rad)\n";
     let i_computed = 0;
-    for (let i = 0; i< components.names.length; ++i){
-        if (components.compute[i]){
-            components.compStr += `${components.names[i]}`;
-            components.compStr += ` ${components.pulsations[i].toExponential(8)}`;
-            components.compStr += ` ${ampls[i_computed].toExponential(8)}`;
-            components.compStr += ` ${phases[i_computed].toExponential(8)}\n`;
+    for (let i = 0; i< available_pulsations.names.length; ++i){
+        if (available_pulsations.compute[i]){
+            available_pulsations.compStr += `${available_pulsations.names[i]}`;
+            available_pulsations.compStr += ` ${available_pulsations.pulsations[i].toExponential(8)}`;
+            available_pulsations.compStr += ` ${ampls[i_computed].toExponential(8)}`;
+            available_pulsations.compStr += ` ${phases[i_computed].toExponential(8)}\n`;
             ++i_computed;
         }
     }
@@ -186,297 +190,228 @@ function getRange(x){
     return [i_min, i_max];
 }
 
-function cStringLength(cString){
-    let end = 0;
-    while (cString.getUint8(end) !== 0 && end < 500) {
-        end++
-    }
-    return end;
-}
+function readData(data){
 
-function stringtoChar(str){
-    var enc = new TextEncoder(); // always utf-8
-    return enc.encode(str);
-}
+    const sep = document.getElementById("separator").value;
+    const col_t = document.getElementById("col_t").value;
+    const col_h = document.getElementById("col_h").value;
 
-Module.onRuntimeInitialized = async () => {
+    // "%d/%m/%Y %H:%M:%S"
+    let userFormat = document.getElementById("format").value;
+    data.readData(sep, col_t, col_h, userFormat);
 
-
-    const memory = Module.wasmMemory;
-
-    function createF64Array(n){
-        const ptr = Module._malloc(n * 8);
-        return new Float64Array(memory.buffer, ptr, n);
-    }
-
-
-    function createCharArray(txtBytes){
-        const txtPtr = Module._malloc(txtBytes.byteLength + 1);
-        const arr = new Uint8Array(memory.buffer, txtPtr, txtBytes.length + 1);
-        arr.set(txtBytes);
-        arr[arr.length - 1] = '\0';
-        return arr;
-
-    }
-
-    function createPointerArray(n){
-        const ptr = Module._malloc(n * 4);
-        const arr = new Uint32Array(memory.buffer, ptr, n);
-        return arr;
-    }
-
-
-    async function readData(){
-
-        if (t != null){
-            Module._free(t.byteOffset);
-        }
-        if (h != null){
-            Module._free(h.byteOffset);
-        }
-
-        const t_ptr = createPointerArray(1);
-        const h_ptr = createPointerArray(1);
-        const epoch_ptr = createPointerArray(1);
-
-        const sep = document.getElementById("separator").value;
-        const col_t = document.getElementById("col_t").value;
-        const col_h = document.getElementById("col_h").value;
-
-        // "%d/%m/%Y %H:%M:%S"
-        let user_format = document.getElementById("format").value;
-        let n_pts = 0;
-        if (user_format.includes("%") || isNaN(parseFloat(user_format))){
-            if (isNaN(parseFloat(user_format))){
-                user_format = "%d/%m/%Y %H:%M:%S";
-            }
-            const format = createCharArray(stringtoChar(user_format));
-            n_pts = Module._readData(txtArray.byteOffset, txtArray.byteLength, format.byteOffset,
-                                        sep.charCodeAt(0), col_t, col_h, t_ptr.byteOffset, h_ptr.byteOffset,
-                                        epoch_ptr.byteOffset);
-
-        }else {
-            const units = parseFloat(user_format);
-            console.log(units);
-            n_pts = Module._readDataUnits(txtArray.byteOffset, txtArray.byteLength, units,
-                                        sep.charCodeAt(0), col_t, col_h, t_ptr.byteOffset, h_ptr.byteOffset,
-                                        epoch_ptr.byteOffset);
-        }
-
-
-        t = new Float64Array(memory.buffer, t_ptr[0], n_pts);
-        h = new Float64Array(memory.buffer, h_ptr[0], n_pts);
-
-        const epochStrLen = cStringLength(new DataView(memory.buffer, epoch_ptr));
-        const epoch_array = new Uint8Array(memory.buffer, epoch_ptr[0], epochStrLen);
-        epoch = new TextDecoder().decode(epoch_array);
-
-        h_mean = mean(h);
-
-
-        const meanDataElement = document.getElementById('mean_data');
-        meanDataElement.innerHTML = `\\( \\overline{h_{data}} = ${toScient(h_mean)} ~ m \\)`;
-        typeset(() => {
-        return [meanDataElement];
-        });
-
-        const refDate = document.getElementById('ref_date');
-        refDate.innerHTML = `dataset reference datetime : ${epoch}`;
-
-        Module._free(t_ptr.byteOffset);
-        Module._free(h_ptr.byteOffset);
-        Module._free(epoch_ptr.byteOffset);
-        Module._free(epoch_array.byteOffset);
-
-    }
-
-    async function analyse(times, heights){
-        fetchComponentsSelection();
-        getPulsations();
-
-        if (amplitudes != null){
-            Module._free(amplitudes.byteOffset);
-            Module._free(pulsations.byteOffset);
-            Module._free(phases.byteOffset);
-        }
-
-        pulsations = createF64Array(components.comp_puls.length);
-        pulsations.set(components.comp_puls);
-
-        amplitudes = createF64Array(components.comp_puls.length);
-
-        phases = createF64Array(components.comp_puls.length);
-
-        Module._getHarmonics(times.byteOffset, heights.byteOffset, times.length, pulsations.byteOffset,
-                            h_mean, phases.byteOffset, amplitudes.byteOffset, pulsations.length);
-
-        if (components.compute[0]){
-            amplitudes[0] = h_mean + amplitudes[0]*Math.cos(phases[0]);
-            phases[0] = 0.0;
-        }
-        fillComponentsTable(amplitudes, phases);
-
-    }
-
-    function plotHarmonics(){
-        const t_fit = createF64Array(t.length * 4);
-        const h_fit = createF64Array(t.length * 4);
-        {
-            const dt = (t[t.length - 1] - t[0]) / t_fit.length ;
-            for (let i = 0; i<t_fit.length; ++i){
-                t_fit[i] = i * dt + t[0];
-            }
-        }
-
-        let mean_plot = h_mean;
-        if (components.compute[0]){
-            mean_plot = 0.0;
-        }
-        Module._sumHarmonics(t_fit.byteOffset, t_fit.length, pulsations.byteOffset, phases.byteOffset,
-                             amplitudes.byteOffset, mean_plot, phases.length, h_fit.byteOffset);
-
-
-        const plot = [];
-
-        const range = getRange(t_fit);
-        plot.push({
-            x: t,
-            y: h,
-            mode: 'lines+markers',
-            name: 'data',
-            line: {
-                color: 'rgb(107, 107, 107)',
-                width: 0.5,
-            }
-        });
-
-        plot.push({
-            x: t_fit,
-            y: h_fit,
-            mode: 'lines',
-            name: 'fit',
-            line: {
-                color: 'rgb(0, 20, 117)',
-                width: 1.0,
-            }
-        });
-
-
-        const min = h_fit.reduce(
-            (accumulator, currentValue) => Math.min(accumulator, currentValue), h_fit[0]);
-        const max = h_fit.reduce(
-            (accumulator, currentValue) => Math.max(accumulator, currentValue), h_fit[0]);
-
-        var layout = {
-            // title: 'Least square fitting',
-            xaxis: {title: 't (h)'},
-            yaxis: {title: 'h (m)'},
-            legend: {"itemsizing": "constant", "itemwidth": 50},
-            shapes: [
-                {
-                    name: 'Analysis',
-                    type: 'rect',
-                    xref: 'x',
-                    yref: 'y',
-                    x0: t_fit[range[0]],
-                    y0: min - (max - min) * 0.1,
-                    x1: t_fit[range[1]],
-                    y1: max + (max - min) * 0.1,
-                    opacity: 0.1,
-                    fillcolor: 'rgb(110, 26, 74)',
-                }],
-                annotations: [
-                    {
-                    x: (t_fit[range[0]] + t_fit[range[1]])/2.0,
-                    y: max + (max - min) * 0.15,
-                    xref: 'x',
-                    yref: 'y',
-                    text: 'Analysis range',
-                    font: {
-                        family: 'sans serif',
-                        size: 18,
-                        color: 'rgb(110, 26, 74)'
-                    },
-                    color: "red",
-                    showarrow: false,
-                    // arrowhead: 7,
-                    // ax: 0,
-                    // ay: -40
-                    }
-                ],
-        };
-
-
-        Plotly.newPlot( "graph", plot, layout);
-
-
-        Module._free(t_fit.byteOffset);
-        Module._free(h_fit.byteOffset);
-
-    }
-
-
-    initComponentsTable();
-
-    let file;
-    const fileInput = document.getElementById('inselec');
-    // In case the file is cached by the navigation
-    if (typeof fileInput.files[0] == "undefined"){
-        document.getElementById("t_min").value = "none";
-        document.getElementById("t_max").value = "2000";
-        document.getElementById("separator").value = ";";
-        document.getElementById("col_t").value = 0;
-        document.getElementById("col_h").value = 1;
-        // "%d/%m/%Y %H:%M:%S"
-        document.getElementById("format").value = "%d/%m/%Y %H:%M:%S";
-        file = await fetch("test_data.txt");
-        txtArray = createCharArray(await file.bytes());
-    } else {
-        file = fileInput.files[0];
-        txtArray = createCharArray(await file.bytes());
-    }
-
-
-
-    readData();
-    const range = getRange(t);
-    analyse(t.subarray(range[0], range[1]), h.subarray(range[0], range[1]));
-    plotHarmonics();
-
-    const compBtn = document.getElementById('compBtn');
-    compBtn.addEventListener("click", ()=>{
-        const range = getRange(t);
-        analyse(t.subarray(range[0], range[1]), h.subarray(range[0], range[1]));
-        plotHarmonics();
-    });
-
-    const reloadBtn = document.getElementById('reload');
-    reloadBtn.addEventListener("click", ()=>{
-        readData();
-        const range = getRange(t);
-        analyse(t.subarray(range[0], range[1]), h.subarray(range[0], range[1]));
-        plotHarmonics();
-    });
-
-    fileInput.onchange = async (e) => {
-        file = e.target.files[0];
-        Module._free(txtArray.byteOffset);
-        txtArray = createCharArray(await file.bytes());
-    }
-
-
-
-    let textFile = null;
-    document.getElementById('textFile').addEventListener("click", ()=>{
-        fillComponentsString(amplitudes, phases);
-        const comptxt = new Blob([components.compStr], {type: 'text/plain'});
-        if (textFile !== null) {
-            window.URL.revokeObjectURL(textFile);
-        }
-        textFile = window.URL.createObjectURL(comptxt);
-        window.open(textFile, '_blank').focus();
-    });
-
+    const meanDataElement = document.getElementById('mean_data');
+    meanDataElement.innerHTML = `\\( \\overline{h_{data}} = ${toScient(data.mean)} ~ m \\)`;
+    const refDate = document.getElementById('ref_date');
+    refDate.innerHTML = `dataset reference datetime : ${data.epoch}`;
 
 }
 
+async function analyze(components, data){
+    components.analyze(data.t.subarray(range[0], range[1]), data.h.subarray(range[0], range[1]), data.mean);
+
+    if (available_pulsations.compute[0]){
+        components.amplitudes[0] = data.mean + components.amplitudes[0]*Math.cos(components.phases[0]);
+        components.phases[0] = 0.0;
+    }
+}
+
+function errorInf(arr0, arr1){
+    let maxDiff = 0.0;
+    let diff = 0.0;
+    for (let i = 0; i < arr0.length; ++i){
+        diff = Math.abs(arr0[i]-arr1[i]);
+        if (diff > maxDiff){
+            maxDiff = diff;
+        }
+    }
+    return maxDiff;
+}
+
+function test(components, data){
+
+    analyze(components, data);
+
+    const data_test = new Data();
+    data_test.h = createF64Array(data.t.length);
+    data_test.t = data.t;
+    data_test.epoch = data.epoch;
+    data_test.mean = data.mean;
+
+    let mean = data.mean;
+    if (available_pulsations.compute[0]){
+        mean = 0.0;
+    }
+    components.sumHarmonics(data_test.t, data_test.h, mean);
+    const min = data_test.h.reduce(
+        (accumulator, currentValue) => Math.min(accumulator, currentValue), data_test.h[0]);
+    const max = data_test.h.reduce(
+        (accumulator, currentValue) => Math.max(accumulator, currentValue), data_test.h[0]);
+    const range = 0.01 * (max - min);
+    for (let i = 0; i<data_test.h.length; ++i){
+        data_test.h[i] += range * (2 * Math.random() - 1.0);
+    }
+    const components_test = new Components();
+    components_test.setPulsation(components.pulsations);
+    analyze(components_test, data_test);
+
+    for (let i = 0; i < components.phases.length; ++i){
+        components.phases[i] %= 2.0 * Math.PI;
+        components_test.phases[i] %= 2.0 * Math.PI;
+    }
+
+    const errorAmplitudes = errorInf(components.amplitudes, components_test.amplitudes);
+    const errorPhases = errorInf(components.phases, components_test.phases);
+
+
+    Module._free(data_test.h.byteOffset);
+    components_test.free();
+
+    return {amplitude:errorAmplitudes, phase:errorPhases};
+}
+
+async function plotHarmonics(components, data){
+    const t_fit = createF64Array(data.t.length * 2);
+    const h_fit = createF64Array(data.t.length * 2);
+    {
+        const dt = (data.t[data.t.length - 1] - data.t[0]) / t_fit.length ;
+        for (let i = 0; i<t_fit.length; ++i){
+            t_fit[i] = i * dt + data.t[0];
+        }
+    }
+
+    let mean_plot = data.mean;
+    if (available_pulsations.compute[0]){
+        mean_plot = 0.0;
+    }
+
+    components.sumHarmonics(t_fit, h_fit, mean_plot);
+    const range = getRange(t_fit);
+
+    const plotOb = getPlotObj(components, data, t_fit, h_fit, range);
+    Plotly.newPlot( "graph", plotOb.plot, plotOb.layout);
+    Module._free(t_fit.byteOffset);
+    Module._free(h_fit.byteOffset);
+
+}
+
+function getErrors(components, data){
+    let mean = data.mean;
+    if (available_pulsations.compute[0]){
+        mean = 0.0;
+    }
+    const errInf = components.errorInf(data.t, data.h, mean);
+    const errMean = components.errorMean(data.t, data.h, mean);
+    return {inf:errInf, mean:errMean};
+}
+
+function analyzeCycle(components, data){
+    // document.getElementById('testResult').innerHTML = testResultDefault;
+    getChosenPulsations();
+    components.setPulsation(available_pulsations.comp_puls);
+    const range = getRange(data.t);
+    const subData = data.subData(range);
+    analyze(components, subData);
+    fillComponentsTable(components.amplitudes, components.phases);
+    plotHarmonics(components, data);
+
+    const errorsDataElem = document.getElementById('errorsWholeData');
+    const errorsRange = document.getElementById('errorsAnalysisRange');
+
+    const errData = getErrors(components, data);
+    const errRange = getErrors(components, subData);
+
+    errorsDataElem.innerHTML =
+        `$ \\|r\\|_{\\infty} = ${toScient(errData.inf)} $ m,
+         $ \\overline{|r_i|} = ${toScient(errData.mean)} $ m `
+
+
+    errorsRange.innerHTML =
+        `$ \\|r_{[t_{min}, t_{max}]}\\|_{\\infty} = ${toScient(errRange.inf)} $ m,
+         $ \\overline{|r_{i[t_{min}, t_{max}]}|} = ${toScient(errRange.mean)} $ m `
+
+    const meanDataElem = document.getElementById('mean_data');
+    typeset(() => {
+        return [meanDataElem, errorsDataElem, errorsRange];
+    });
+}
+
+function main(){
+
+    Module.onRuntimeInitialized = async () => {
+
+        initComponentsTable(available_pulsations);
+
+        const data = new Data();
+
+        let file;
+        const fileInput = document.getElementById('inselec');
+        // In case the file is cached by the navigation
+        if (typeof fileInput.files[0] == "undefined"){
+            document.getElementById("t_min").value = "none";
+            document.getElementById("t_max").value = "2000";
+            document.getElementById("separator").value = ";";
+            document.getElementById("col_t").value = 0;
+            document.getElementById("col_h").value = 1;
+            // "%d/%m/%Y %H:%M:%S"
+            document.getElementById("format").value = "%d/%m/%Y %H:%M:%S";
+            file = await fetch("test_data.txt");
+            data.txt = createCharArray(await file.bytes());
+        } else {
+            file = fileInput.files[0];
+            data.txt = createCharArray(await file.bytes());
+        }
+
+        readData(data);
+        const components = new Components();
+        analyzeCycle(components, data);
+
+        const compBtn = document.getElementById('compBtn');
+        compBtn.addEventListener("click", ()=>{
+            analyzeCycle(components, data);
+        });
+
+        const reloadBtn = document.getElementById('reload');
+        reloadBtn.addEventListener("click", ()=>{
+            readData(data);
+            analyzeCycle(components, data);
+        });
+
+        fileInput.onchange = async (e) => {
+            file = e.target.files[0];
+            Module._free(data.txt.byteOffset);
+            data.txt = createCharArray(await file.bytes());
+        }
+
+        let textFile = null;
+        document.getElementById('textFile').addEventListener("click", ()=>{
+            fillComponentsString(amplitudes, phases);
+            const comptxt = new Blob([available_pulsations.compStr], {type: 'text/plain'});
+            if (textFile !== null) {
+                window.URL.revokeObjectURL(textFile);
+            }
+            textFile = window.URL.createObjectURL(comptxt);
+            window.open(textFile, '_blank').focus();
+        });
+
+        // const testBtn = document.getElementById('test');
+        // testBtn.addEventListener("click", ()=>{
+        //     getChosenPulsations();
+        //     components.setPulsation(available_pulsations.comp_puls);
+        //     const range = getRange(data.t);
+        //     const errors = test(components, data.subData(range));
+        //     let mean = data.mean;
+        //     if (available_pulsations.compute[0]){
+        //         mean = 0.0;
+        //     }
+        //     const testElem = document.getElementById('testResult');
+        //     testElem.innerHTML =
+        //         `Ideal signal with noise : $~~~ ||e_{\\theta}||_{\\infty} = ${toScient(errors.phase)} $ rad ,
+        //          $ ||e_{Hf}||_{\\infty} = ${toScient(errors.amplitude)} $ m `
+        //     typeset(() => {
+        //         return [testElem];
+        //     });
+        // });
+
+    }
+}
